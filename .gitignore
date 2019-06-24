@@ -1,4 +1,7 @@
 FactorioBot/.env
+FactorioBot/config.py
+FactorioBot/discord.log
+.idea/
 
 # User-specific stuff:
 .idea/workspace.xml
