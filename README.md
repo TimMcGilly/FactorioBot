@@ -1,4 +1,5 @@
-#Factorio Discord Bot
+# Factorio Discord Bot
+
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
 ![Header Image][header-image.png]
@@ -8,7 +9,7 @@ We are coding this bot as far of the Discord Hack Week. It allows you to play an
 
 A large group of players should be able to each send the factorio players a few commands and together build the world.
 
-##Planned features
+## Planned features
 - [ ] Player movement
 - [ ] Take screenshots
 - [ ] Craft items
@@ -17,7 +18,7 @@ A large group of players should be able to each send the factorio players a few 
 - [ ] Send chat message
 - [ ] Server controllable cooldowns
 
-##Setup
+## Setup
 ### Dependencies
 - `discord.py`
 - `pyautogui`
