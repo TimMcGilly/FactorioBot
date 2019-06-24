@@ -1,6 +1,5 @@
 import asyncio
 
-
 from discord.ext import commands
 import logging
 import config
@@ -36,7 +35,7 @@ class Bot(commands.Bot):
 async def run():
     bot = Bot()
 
-    await bot.load_cogs(["cogs.commands"])
+    await bot.load_cogs(["cogs.commands", "cogs.factorio"])
 
     try:
         await bot.start(config.token)
