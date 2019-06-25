@@ -28,7 +28,7 @@ class FactorioControl(commands.Cog):
             current_command = self.command_queue.pop()
 
             # Calls function which is first index and unpacks the aurgments and pass them into the function.
-            await current_command[1](*current_command[2:])
+            await current_command[0](*current_command[1:])
 
         self.currently_executing = False
 
@@ -47,32 +47,35 @@ class FactorioControl(commands.Cog):
             key = "d"
 
         if key is not None and 0 < length < 11:
-
-            await ctx.send("Moving {0} for {1} seconds.".format(direction, length))
-            p.keyDown(key)
-            await asyncio.sleep(length)
-            p.keyUp(key)
+            await self.enqueue(self.exec_walk, ctx, direction, key, length)
 
         else:
             await ctx.send("Invalid direction or length limit reached.")
 
     @commands.command()
     async def sayInGame(self, ctx, *, message):
-
         if len(message) < 100:
-            p.press("`")
-            p.typewrite(message, interval=0)
-            p.press("enter")
-            await ctx.send("Message sent.")
+            await self.enqueue(self.exec_sayInGame, ctx, message)
 
     # Test command
     @commands.command()
     async def long_command(self, ctx):
         print("long command")
-        temp_ctx = ctx
-        await self.enqueue(ctx.message.id, self.exec_long_command, temp_ctx, "dave")
+        await self.enqueue(self.exec_long_command, ctx, "dave")
 
     '''Executes the commands in factorio'''
+
+    async def exec_walk(self, ctx, direction, key, length):
+        await ctx.send("Moving {0} for {1} seconds.".format(direction, length))
+        p.keyDown(key)
+        await asyncio.sleep(length)
+        p.keyUp(key)
+
+    async def exec_sayInGame(self, ctx, message):
+        p.press("`")
+        p.typewrite(message, interval=0)
+        p.press("enter")
+        await ctx.send("Message sent.")
 
     # Test exec
     async def exec_long_command(self, ctx, bob):
