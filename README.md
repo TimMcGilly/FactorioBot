@@ -11,7 +11,7 @@ A large group of players should be able to each send the factorio players a few 
 
 ## Planned features
 - [x] Player movement
-- [ ] Take screenshots
+- [x] Take screenshots
 - [ ] Craft items
 - [ ] Place items
 - [ ] Pick up items

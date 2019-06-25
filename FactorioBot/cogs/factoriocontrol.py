@@ -1,7 +1,8 @@
 import asyncio
 import pyautogui as p
 from discord.ext import commands
-
+import discord
+import io
 
 class FactorioControl(commands.Cog):
     def __init__(self, bot):
@@ -30,6 +31,7 @@ class FactorioControl(commands.Cog):
             # Calls function which is first index and unpacks the aurgments and pass them into the function.
             await current_command[0](*current_command[1:])
 
+            await self.screenshot(current_command[1])
         self.currently_executing = False
 
     @commands.command()
@@ -82,6 +84,14 @@ class FactorioControl(commands.Cog):
         await asyncio.sleep(2)
         await ctx.send(bob)
 
+    async def screenshot(self, ctx):
+        shot = p.screenshot() #Returns a PIL Image
+        imgbytes = io.BytesIO()
+
+        shot.save(imgbytes, format="JPEG")
+
+        imgbytes.seek(0)
+        await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
 # Setups cog
 def setup(bot):
