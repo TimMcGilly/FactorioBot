@@ -2,6 +2,7 @@ FactorioBot/.env
 FactorioBot/config.py
 FactorioBot/discord.log
 .idea/
+*.pyc
 
 # User-specific stuff:
 .idea/workspace.xml
