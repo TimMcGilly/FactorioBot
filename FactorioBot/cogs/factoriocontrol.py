@@ -3,13 +3,37 @@ import pyautogui as p
 from discord.ext import commands
 
 
-
 class FactorioControl(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.command_queue = []
+        self.currently_executing = False
+
+    '''Queue functions'''
+
+    async def enqueue(self, message_id, func_name, *args):
+        # Adds the message id, function name and arguments as a flat list to end of queue
+        self.command_queue.append([message_id, func_name, *args])
+
+        # Starts executing queue if not already
+        if not self.currently_executing:
+            await self.execute_command_queue()
+
+    async def execute_command_queue(self):
+        # Sets the currently_executing flag so that enqueue doesn't launch multiple of these functions
+        self.currently_executing = True
+
+        while self.command_queue:
+            # Gets next function and args to execute
+            current_command = self.command_queue.pop()
+
+            # Calls function which is first index and unpacks the aurgments and pass them into the function.
+            await current_command[1](*current_command[2:])
+
+        self.currently_executing = False
 
     @commands.command()
-    async def walk(self, ctx, direction, length : int):
+    async def walk(self, ctx, direction, length: int):
 
         key = None
 
@@ -22,13 +46,12 @@ class FactorioControl(commands.Cog):
         elif direction == "east" or direction == "e":
             key = "d"
 
-        if key is not None and 0<length<11:
+        if key is not None and 0 < length < 11:
 
             await ctx.send("Moving {0} for {1} seconds.".format(direction, length))
             p.keyDown(key)
             await asyncio.sleep(length)
             p.keyUp(key)
-
 
         else:
             await ctx.send("Invalid direction or length limit reached.")
@@ -41,6 +64,21 @@ class FactorioControl(commands.Cog):
             p.typewrite(message, interval=0)
             p.press("enter")
             await ctx.send("Message sent.")
+
+    # Test command
+    @commands.command()
+    async def long_command(self, ctx):
+        print("long command")
+        temp_ctx = ctx
+        await self.enqueue(ctx.message.id, self.exec_long_command, temp_ctx, "dave")
+
+    '''Executes the commands in factorio'''
+
+    # Test exec
+    async def exec_long_command(self, ctx, bob):
+        await asyncio.sleep(2)
+        await ctx.send(bob)
+
 
 # Setups cog
 def setup(bot):
