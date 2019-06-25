@@ -20,7 +20,8 @@ A large group of players should be able to each send the factorio players a few 
 - [ ] Server controllable cooldowns
 
 ## Setup
-### Dependencies
+### Dependencie
+- `python 3.6 or higher`
 - `discord.py`
 - `pyautogui`
 
