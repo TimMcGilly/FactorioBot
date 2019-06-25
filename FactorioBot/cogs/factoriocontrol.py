@@ -4,7 +4,7 @@ from discord.ext import commands
 
 
 
-class Factorio(commands.Cog):
+class FactorioControl(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -44,4 +44,4 @@ class Factorio(commands.Cog):
 
 # Setups cog
 def setup(bot):
-    bot.add_cog(Factorio(bot))
+    bot.add_cog(FactorioControl(bot))

@@ -35,7 +35,7 @@ class Bot(commands.Bot):
 async def run():
     bot = Bot()
 
-    await bot.load_cogs(["cogs.commands", "cogs.factorio"])
+    await bot.load_cogs(["cogs.factoriocontrol", "cogs.factoriohelper"])
 
     try:
         await bot.start(config.token)
