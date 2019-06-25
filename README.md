@@ -10,16 +10,18 @@ We are coding this bot as far of the Discord Hack Week. It allows you to play an
 A large group of players should be able to each send the factorio players a few commands and together build the world.
 
 ## Planned features
-- [ ] Player movement
+- [x] Player movement
 - [ ] Take screenshots
 - [ ] Craft items
 - [ ] Place items
 - [ ] Pick up items
-- [ ] Send chat message
+- [x] Send chat message
+- [ ] Set research
 - [ ] Server controllable cooldowns
 
 ## Setup
-### Dependencies
+### Dependencie
+- `python 3.6 or higher`
 - `discord.py`
 - `pyautogui`
 

@@ -8,15 +8,6 @@ class Factorio(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
-    @commands.command()
-    async def center(self, ctx):
-        screenWidth, screenHeight = p.size()
-
-        p.moveTo(screenWidth / 2, screenHeight / 2)
-
-        await ctx.send("did it")
-
     @commands.command()
     async def walk(self, ctx, direction, length : int):
 
