@@ -1,0 +1,11 @@
+{
+    "name": "DiscordControl",
+    "version": "0.1.0",
+    "title": "Discord Control",
+    "author": "Tim#3509 dislocated#8731",
+    "contact": "",
+    "homepage": "https://github.com/TotallyCoded/FactorioBot",
+    "factorio_version": "0.16",
+    "dependencies": ["base >= 0.16"],
+    "description": "This mod allow a discord bot to control your factorio character so factorio can be played through discord."
+}

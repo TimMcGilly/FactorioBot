@@ -3,6 +3,8 @@ import pyautogui as p
 from discord.ext import commands
 import discord
 import io
+import os
+from FactorioBot import config
 
 class FactorioControl(commands.Cog):
     def __init__(self, bot):
@@ -65,6 +67,10 @@ class FactorioControl(commands.Cog):
         print("long command")
         await self.enqueue(self.exec_long_command, ctx, "dave")
 
+    @commands.command()
+    async def mod_output_test(self, ctx, *, message):
+        await self.enqueue(self.exec_mod_output_test, ctx, message)
+
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -84,6 +90,13 @@ class FactorioControl(commands.Cog):
         await asyncio.sleep(2)
         await ctx.send(bob)
 
+    async def exec_mod_output_test(self, ctx, message):
+        p.press("`")
+        p.typewrite("/write_test_d " + message, interval=0)
+        p.press("enter")
+        await ctx.send(await self.read_ouput_txt())
+
+    #Helper functions
     async def screenshot(self, ctx):
         shot = p.screenshot() #Returns a PIL Image
         imgbytes = io.BytesIO()
@@ -92,6 +105,14 @@ class FactorioControl(commands.Cog):
 
         imgbytes.seek(0)
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
+
+    async def read_ouput_txt(self):
+        path = config.factorio_user_data + "\script-output\output.txt"
+        path = os.path.expandvars(path)
+        print(path)
+        if os.path.exists(path):
+            with open(path) as fp:
+                return fp.read()
 
 # Setups cog
 def setup(bot):
