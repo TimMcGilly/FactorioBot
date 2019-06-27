@@ -34,7 +34,7 @@ class FactorioControl(commands.Cog):
             # Gets next function and args to execute
             current_command = self.command_queue.pop()
 
-            # Calls function which is first index and unpacks the aurgments and pass them into the function.
+            # Calls function which is first index and unpacks the arguments and pass them into the function.
             await current_command[0](*current_command[1:])
 
             await self.screenshot(current_command[1])
@@ -95,10 +95,11 @@ class FactorioControl(commands.Cog):
         await ctx.send(bob)
 
     async def exec_mod_output_test(self, ctx, message):
+        observer: Observer = self.setup_read_txt()
         p.press("`")
         p.typewrite("/write_test_d " + message, interval=0)
         p.press("enter")
-        await ctx.send(await self.read_ouput_txt())
+        await ctx.send(await self.read_ouput_txt(observer))
 
     # Helper functions
     async def screenshot(self, ctx):
@@ -110,7 +111,7 @@ class FactorioControl(commands.Cog):
         imgbytes.seek(0)
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
-    async def read_ouput_txt(self):
+    def setup_read_txt(self):
         dirpath = config.factorio_user_data + "\script-output"
         dirpath = os.path.expandvars(dirpath)
         path = dirpath + '\output.txt'
@@ -120,13 +121,19 @@ class FactorioControl(commands.Cog):
         if os.path.exists(path):
             observer = Observer()
             read_on_modified = ReadOnModified(path, observer)
-            observer.schedule(read_on_modified, path, recursive=False)
+            observer.schedule(read_on_modified, dirpath, recursive=False)
             observer.start()
+            return observer
 
-            ''' Add blocking loop here'''
-            if observer.isAlive() is False:
-                with open(path) as fp:
-                    return fp.read()
+    async def read_ouput_txt(self, observer: Observer):
+        path = config.factorio_user_data + '\script-output\output.txt'
+        path = os.path.expandvars(path)
+
+        while observer.isAlive() is True:
+            await asyncio.sleep(0.1)
+        print(observer.isAlive())
+        with open(path) as fp:
+            return fp.read()
 
 
 class ReadOnModified(FileSystemEventHandler):
