@@ -14,7 +14,7 @@ commands.add_command("write_test_d", DISCORD_HELP_MESSAGE, function(e)
     game.write_file("output.txt", e.parameter, false, e.player_index)
 end)
 
-commands.add_command("write_test_multipram_d", DISCORD_HELP_MESSAGE, function(e)
+commands.add_command("write_test_multiparam_d", DISCORD_HELP_MESSAGE, function(e)
     local split_param = split(e.parameter)
     game.write_file("param1.txt", split_param[1], false, e.player_index)
     game.write_file("param2.txt", split_param[2], false, e.player_index)
@@ -25,7 +25,9 @@ commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg = pcall(craft_item, e)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
+                e.player_index)
+    else
+        game.write_file("output.txt", "Started crafting: " .. split_param[2])
     end
 end)
 
