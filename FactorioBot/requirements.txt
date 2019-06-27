@@ -1,2 +1,3 @@
 pyautogui
 discord.py
+watchdog

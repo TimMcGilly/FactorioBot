@@ -1,10 +1,14 @@
+import os
+import io
 import asyncio
-import pyautogui as p
 from discord.ext import commands
 import discord
-import io
-import os
+import pyautogui as p
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 from FactorioBot import config
+
 
 class FactorioControl(commands.Cog):
     def __init__(self, bot):
@@ -96,9 +100,9 @@ class FactorioControl(commands.Cog):
         p.press("enter")
         await ctx.send(await self.read_ouput_txt())
 
-    #Helper functions
+    # Helper functions
     async def screenshot(self, ctx):
-        shot = p.screenshot() #Returns a PIL Image
+        shot = p.screenshot()  # Returns a PIL Image
         imgbytes = io.BytesIO()
 
         shot.save(imgbytes, format="JPEG")
@@ -107,12 +111,36 @@ class FactorioControl(commands.Cog):
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
     async def read_ouput_txt(self):
-        path = config.factorio_user_data + "\script-output\output.txt"
-        path = os.path.expandvars(path)
+        dirpath = config.factorio_user_data + "\script-output"
+        dirpath = os.path.expandvars(dirpath)
+        path = dirpath + '\output.txt'
+
         print(path)
+
         if os.path.exists(path):
-            with open(path) as fp:
-                return fp.read()
+            observer = Observer()
+            read_on_modified = ReadOnModified(path, observer)
+            observer.schedule(read_on_modified, path, recursive=False)
+            observer.start()
+
+            ''' Add blocking loop here'''
+            if observer.isAlive() is False:
+                with open(path) as fp:
+                    return fp.read()
+
+
+class ReadOnModified(FileSystemEventHandler):
+
+    def __init__(self, file_to_check, observer):
+        self.file_to_check = file_to_check
+        self.observer = observer
+
+    def on_modified(self, event):
+        super(ReadOnModified, self).on_modified(event)
+
+        if event.src_path == self.file_to_check:
+            self.observer.stop()
+
 
 # Setups cog
 def setup(bot):
