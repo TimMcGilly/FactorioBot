@@ -17,7 +17,7 @@ logger.addHandler(handler)
 
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=self.get_prefix, description="Fuck you, Tim")
+        super().__init__(command_prefix=self.get_prefix, description="Bob is your uncle")
 
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
