@@ -2,6 +2,7 @@ FactorioBot/.env
 .env
 FactorioBot/config.py
 FactorioBot/discord.log
+FactorioBot/config.json
 .idea/
 *.pyc
 
