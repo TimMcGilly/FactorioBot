@@ -31,11 +31,23 @@ commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
     end
 end)
 
+commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
+    local status, errorMsg = pcall(set_research, e)
+    if status == false then
+        game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
+                e.player_index)
+    else
+        game.write_file("output.txt", "Started researching: ".. e.parameter)
+    end
+end)
+
+function set_research(e)
+    game.players[e.player_index].force.current_research = e.parameter
+end
 function craft_item(e)
     local split_param = split(e.parameter)
     local count = game.players[e.player_index].begin_crafting {
         count = split_param[1],
         recipe = split_param[2]
     }
-    game.write_file("output.txt", count, false, e.player_index)
 end
