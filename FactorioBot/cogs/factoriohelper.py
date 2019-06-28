@@ -2,6 +2,8 @@ import os
 
 import discord
 from discord.ext import commands
+import pyautogui as p
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 
 
 class FactorioHelper(commands.Cog):

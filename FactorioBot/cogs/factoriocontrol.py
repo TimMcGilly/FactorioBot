@@ -54,6 +54,7 @@ class FactorioControl(commands.Cog):
     async def walk(self, ctx, direction, length: int):
 
         key = None
+        direction = direction.lower()
 
         if direction == "north" or direction == "n":
             key = "w"
@@ -97,6 +98,31 @@ class FactorioControl(commands.Cog):
     async def research(self, ctx, tech: str = None):
         await self.enqueue(self.exec_research, ctx, tech)
 
+    @commands.command()
+    async def place(self, ctx, item, direction="N", distance: int = 1, rotation="N"):
+        # Item validation
+        dirname = os.path.dirname(__file__)
+        filename = os.path.join(dirname, '../items.txt')
+        with open(filename, "r") as fp:
+            recipes = fp.readlines()
+        recipes = [x.strip() for x in recipes]
+        if item in recipes:
+
+            # Direction validation
+            direction = helper.get_valid_direction(direction)
+            if direction is not None:
+                rotation = helper.get_valid_direction(direction)
+                if rotation is not None:
+                    await self.enqueue(self.exec_place, ctx, item, direction, distance, rotation)
+                else:
+                    await ctx.send("Please enter a valid rotation. Default is N.")
+            else:
+                await ctx.send("Please enter a valid direction")
+        else:
+            await ctx.send(
+                "That is a invalid item to craft.\nPlease check for typos or type `!crafting_help` to get a list of "
+                "all the items")
+
     # Test command
     @commands.command()
     async def long_command(self, ctx):
@@ -139,6 +165,15 @@ class FactorioControl(commands.Cog):
         if output.startswith("ERROR"):
             output = "Invalid Command: Invalid technology or unexpected error. " \
                      "(please use data.raw technology names)"
+        await ctx.send(output)
+
+    async def exec_place(self, ctx, item, direction, distance, rotation):
+        output = await helper.SendFactorioCommand("place_item_d", item, direction, str(distance), rotation)
+        if output.startswith("ERROR"):
+            await ctx.send("A error occurred.")
+        else:
+            output = "Successfully placed " + item
+
         await ctx.send(output)
 
     # Test exec
