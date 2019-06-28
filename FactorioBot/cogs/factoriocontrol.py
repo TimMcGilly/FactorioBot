@@ -117,19 +117,22 @@ class FactorioControl(commands.Cog):
 
     @commands.command()
     @commands.cooldown(*helper.get_config('research'))
-    async def research(self, ctx, tech):
-        dirname = os.path.dirname(__file__)
-        filename = os.path.join(dirname, '../techs.txt')
+    async def research(self, ctx, tech=None):
+        if tech is not None:
+            dirname = os.path.dirname(__file__)
+            filename = os.path.join(dirname, '../techs.txt')
 
-        with open(filename, "r") as fp:
-            techs = fp.readlines()
-        techs = [x.strip() for x in techs]
+            with open(filename, "r") as fp:
+                techs = fp.readlines()
+            techs = [x.strip() for x in techs]
 
-        if tech in techs:
-            await self.enqueue(self.exec_research, ctx, tech)
+            if tech in techs:
+                await self.enqueue(self.exec_research, ctx, tech)
+            else:
+                await ctx.send(
+                    "Invalid Argument: Specified research name not found.\nPlease check for typos or type `!research_help` to get a list of all the techs.")
         else:
-            await ctx.send(
-                "Invalid Argument: Specified research name not found.\nPlease check for typos or type `!research_help` to get a list of all the techs.")
+            await self.enqueue(self.exec_research, ctx)
 
     @commands.command()
     @commands.cooldown(*helper.get_config('place'))

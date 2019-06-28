@@ -75,20 +75,19 @@ commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
             game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
                     e.player_index)
         else
-            if isStop then
-                game.write_file("output.txt", "Stopped current research.", false,
-                        e.player_index)
-            else
-                game.write_file("output.txt",
-                        "Started researching: " .. e.parameter, false,
-                        e.player_index)
-            end
+            game.write_file("output.txt",
+                    "Started researching: " .. e.parameter, false,
+                    e.player_index)
         end
     else
         game.write_file("output.txt", "Technology is unavailable. Please research prerequisite technologies first.",
                 false, e.player_index)
     end
-
+    if isStop then
+        set_research(e)
+        game.write_file("output.txt", "Stopped current research.", false,
+                e.player_index)
+    end
 end)
 
 function get_tech_enabled(tech)
