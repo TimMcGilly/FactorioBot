@@ -32,12 +32,24 @@ commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
 end)
 
 commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
+    local isStop = false
+    if e.parameter == "" or e.parameter == "stop" or e.parameter == nil then
+        e.parameter = nil
+        isStop = true
+    end
+
     local status, errorMsg = pcall(set_research, e)
+
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
                 e.player_index)
     else
-        game.write_file("output.txt", "Started researching: ".. e.parameter)
+        if isStop then
+            game.write_file("output.txt", "Stopped current research.", false,
+                    e.player_index)
+        else
+            game.write_file("output.txt", "Started researching: ".. e.parameter)
+        end
     end
 end)
 
