@@ -59,9 +59,7 @@ class ReadOnModified(FileSystemEventHandler):
 
 def get_valid_direction(input_str: str, sub_direction: bool = False):
     input_str = input_str.lower().strip()
-    print(input_str)
     input_str = re.sub('[^a-z0-9]+', '', input_str)
-    print(input_str)
     valid_direction = None
 
     if input_str == "north" or input_str == "n":

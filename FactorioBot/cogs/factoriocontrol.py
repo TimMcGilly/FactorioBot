@@ -18,9 +18,9 @@ class FactorioControl(commands.Cog):
 
     '''Queue functions'''
 
-    async def enqueue(self, message_id, func_name, *args):
-        # Adds the message id, function name and arguments as a flat list to end of queue
-        self.command_queue.append([message_id, func_name, *args])
+    async def enqueue(self, func_name, ctx, *args):
+        # Adds the message id, function name, ctx and arguments as a flat list to end of queue
+        self.command_queue.append([func_name, ctx, *args])
 
         # Starts executing queue if not already
         if not self.currently_executing:
@@ -34,10 +34,11 @@ class FactorioControl(commands.Cog):
             # Gets next function and args to execute
             current_command = self.command_queue.pop(0)
 
-            # Calls function which is first index and unpacks the arguments and pass them into the function.
+            # Calls function which is second index and unpacks the arguments and pass them into the function.
             await current_command[0](*current_command[1:])
 
             await self.screenshot(current_command[1])
+
         self.currently_executing = False
 
     # Helper functions
@@ -49,6 +50,18 @@ class FactorioControl(commands.Cog):
 
         imgbytes.seek(0)
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
+
+    @commands.command()
+    async def output_command_queue(self, ctx):
+        embed = discord.Embed(title="Command Queue",
+                              description="Queue of factorio commands to be run.", color=0x00ff00)
+        for counter, item in enumerate(self.command_queue):
+            # Set name to place in queue and content to the person message with prefix stripped
+            embed.add_field(name=str(counter + 1) + ".", value=item[1].message.content.strip(item[1].prefix))
+
+        print(self.command_queue)
+
+        await ctx.send(embed=embed)
 
     @commands.command()
     @commands.cooldown(*helper.get_config('walk'))
@@ -147,7 +160,6 @@ class FactorioControl(commands.Cog):
         p.keyDown(key)
         await asyncio.sleep(length)
         p.keyUp(key)
-
 
     async def exec_say(self, ctx, message):
         p.press("`")

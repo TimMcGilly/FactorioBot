@@ -8,6 +8,8 @@ function split(inputstr, sep)
     return t
 end
 
+DISCORD_HELP_MESSAGE = "DiscordControl command. DO NOT USE MANUALLY "
+
 commands.add_command("zoom_d", DISCORD_HELP_MESSAGE, function(e)
     if e.parameter == "" or e.parameter == nil then
         game.players[e.player_index].zoom = 0.75
@@ -15,8 +17,6 @@ commands.add_command("zoom_d", DISCORD_HELP_MESSAGE, function(e)
         game.players[e.player_index].zoom = e.parameter
     end
 end)
-
-DISCORD_HELP_MESSAGE = "DiscordControl command. DO NOT USE MANUALLY "
 
 commands.add_command("write_test_d", DISCORD_HELP_MESSAGE, function(e)
     game.write_file("output.txt", e.parameter, false, e.player_index)
