@@ -95,7 +95,7 @@ To return data back to the python bot we use a method seen in [Clusterio](https:
     * `get_valid_direction` takes in a input and returns a valid single character direction or `None` if none exists.
      
 
-[header-image.png]: https://i.imgur.com/ZW2V92t.png
+[header-image.png]: https://cdn.discordapp.com/attachments/407617128112324629/594294628031922192/bot_banner.png
 [technical-diagram.png]: https://i.imgur.com/cyJ808U.png
 
 
