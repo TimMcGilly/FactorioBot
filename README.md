@@ -87,6 +87,14 @@ To return data back to the python bot we use a method seen in [Clusterio](https:
         * !crafting_help
         * !research_help
         * !config
+* `helper.py`
+    * Contains helper functions for the cogs.
+    * `SendFactorioCommand` calls `setup_read_txt` and then types a command using `pyautogui` into factorio to trigger the lua mod and then calls `read_ouput_txt` to get log from factorio and returns that.
+        * `setup_read_txt` sets up a file watch on `output.txt` and returns a observer.
+        * `read_ouput_txt` waits for the watch and then read the full file safely and returns it.
+    * `get_valid_direction` takes in a input and returns a valid single character direction or `None` if none exists.
+     
+
 [header-image.png]: https://i.imgur.com/ZW2V92t.png
 [technical-diagram.png]: https://i.imgur.com/cyJ808U.png
 
