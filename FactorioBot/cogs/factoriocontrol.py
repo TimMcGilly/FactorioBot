@@ -102,7 +102,7 @@ class FactorioControl(commands.Cog):
         dirname = os.path.dirname(__file__)
         filename = os.path.join(dirname, '../items.txt')
 
-        if count.isdigit() is False:
+        if count.isdigit() is False or count < 1:
             await ctx.send("That is a invalid number of items to craft.")
         else:
             with open(filename, "r") as fp:
