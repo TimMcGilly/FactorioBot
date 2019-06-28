@@ -1,7 +1,10 @@
 import os
 import asyncio
+import json
 import FactorioBot.config as config
 import pyautogui as p
+import logging
+from discord.ext import commands
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -52,14 +55,45 @@ class ReadOnModified(FileSystemEventHandler):
             self.observer.stop()
 
 
-'''Define cooldowns and uses'''
+def setup_config():
+    if not os.path.exists("config.json"):
+        json_config = json.loads("""{
+            "commands": {
+                "walk": {
+                    "uses": 2,
+                    "cooldown": 15
+                },
+                "say": {
+                    "uses": 2,
+                    "cooldown": 5
+                },
+                "craft": {
+                    "uses": 1,
+                    "cooldown": 10
+                },
+                "research": {
+                    "uses": 1,
+                    "cooldown": 1
+                }
+            }
+        }
+        """)
+        print(json_config)
+        with open('config.json', 'w') as outfile:
+            json.dump(json_config, outfile)
 
-cd_walk = 15
-cd_say_in_game = 5
-cd_craft_item = 10
-cd_research = 10
 
-u_walk = 2
-u_say_in_game = 1
-u_craft_item = 1
-u_research = 2
+
+def get_config(command_name):
+    with open("config.json", 'r') as json_file:
+        json_config = json.load(json_file)
+        return [json_config['commands'][command_name]['uses'], json_config['commands'][command_name]['cooldown'],
+                commands.BucketType.user]
+
+
+def set_config(command_name, attribute, value):
+    with open("config.json", 'r') as json_file:
+        json_config = json.load(json_file)
+    with open("config.json", 'w') as json_file:
+        json_config['commands'][command_name][attribute] = value
+        json.dump(json_config, json_file)

@@ -49,7 +49,7 @@ class FactorioControl(commands.Cog):
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
     @commands.command()
-    @commands.cooldown(helper.u_walk, helper.cd_walk, commands.BucketType.user)
+    @commands.cooldown(*helper.get_config('walk'))
     async def walk(self, ctx, direction, length: int):
 
         key = None
@@ -70,11 +70,10 @@ class FactorioControl(commands.Cog):
             await ctx.send("Invalid direction or length limit reached.")
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('say'))
     async def say(self, ctx, *, message):
         if len(message) < 100:
             await self.enqueue(self.exec_say, ctx, message)
-
-
 
     # Test command
     @commands.command()
@@ -86,15 +85,16 @@ class FactorioControl(commands.Cog):
     async def mod_output_test(self, ctx, *, message):
         await self.enqueue(self.exec_mod_output_test, ctx, message)
 
+    @commands.cooldown(*helper.get_config('craft'))
     @commands.command()
-    @commands.cooldown(helper.u_craft_item, helper.cd_craft_item, commands.BucketType.user)
     async def craft_item(self, ctx, item, count):
         await self.enqueue(self.exec_craft_item, ctx, item, count)
 
     @commands.command()
-    @commands.cooldown(helper.u_research, helper.cd_research, commands.BucketType.user)
-    async def research(self, ctx, tech:str = None):
+    @commands.cooldown(*helper.get_config('research'))
+    async def research(self, ctx, tech: str = None):
         await self.enqueue(self.exec_research, ctx, tech)
+
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -116,7 +116,7 @@ class FactorioControl(commands.Cog):
                      "(please use data.raw recipe names)"
         await ctx.send(output)
 
-    async def exec_research(self,ctx,tech:str = None):
+    async def exec_research(self, ctx, tech: str = None):
         if tech is not None:
             output = await helper.SendFactorioCommand("set_research_d", tech)
         else:
@@ -126,6 +126,7 @@ class FactorioControl(commands.Cog):
             output = "Invalid Command: Invalid technology or unexpected error. " \
                      "(please use data.raw technology names)"
         await ctx.send(output)
+
     # Test exec
     async def exec_long_command(self, ctx, bob):
         await asyncio.sleep(2)
@@ -134,6 +135,7 @@ class FactorioControl(commands.Cog):
     async def exec_mod_output_test(self, ctx, message):
         output = await helper.SendFactorioCommand('write_test_d', message)
         await ctx.send(output)
+
 
 # Setups cog
 def setup(bot):

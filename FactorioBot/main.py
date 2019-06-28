@@ -1,8 +1,8 @@
 import asyncio
-
+import FactorioBot.helper as helper
 from discord.ext import commands
 import logging
-import config
+import FactorioBot.config as config
 
 logger = logging.getLogger('discord')
 
@@ -33,7 +33,9 @@ class Bot(commands.Bot):
         for name in names:
             self.load_extension(name)
 
+
 async def run():
+    helper.setup_config()
     bot = Bot()
 
     await bot.load_cogs(["cogs.factoriocontrol", "cogs.factoriohelper"])
