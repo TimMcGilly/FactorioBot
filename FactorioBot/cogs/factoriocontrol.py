@@ -87,6 +87,9 @@ class FactorioControl(commands.Cog):
     async def craft_item(self, ctx, item, count):
         await self.enqueue(self.exec_craft_item, ctx, item, count)
 
+    @commands.command()
+    async def research(self, ctx, tech:str = None):
+        await self.enqueue(self.exec_research, ctx, tech)
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -104,7 +107,19 @@ class FactorioControl(commands.Cog):
     async def exec_craft_item(self, ctx, item, count):
         output = await helper.SendFactorioCommand("craft_item_d", count, item)
         if output.startswith("ERROR"):
-            output = "Invalid Command: Requested to craft more than possible or invalid recipe."
+            output = "Invalid Command: Requested to craft more than possible or invalid recipe. " \
+                     "(please use data.raw recipe names)"
+        await ctx.send(output)
+
+    async def exec_research(self,ctx,tech:str = None):
+        if tech is not None:
+            output = await helper.SendFactorioCommand("set_research_d", tech)
+        else:
+            output = await helper.SendFactorioCommand("set_research_d")
+
+        if output.startswith("ERROR"):
+            output = "Invalid Command: Invalid technology or unexpected error. " \
+                     "(please use data.raw technology names)"
         await ctx.send(output)
     # Test exec
     async def exec_long_command(self, ctx, bob):
@@ -114,9 +129,6 @@ class FactorioControl(commands.Cog):
     async def exec_mod_output_test(self, ctx, message):
         output = await helper.SendFactorioCommand('write_test_d', message)
         await ctx.send(output)
-
-
-
 
 # Setups cog
 def setup(bot):
