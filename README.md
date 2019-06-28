@@ -12,15 +12,15 @@ A large group of players should be able to each send the factorio players a few 
 ## Planned features
 - [x] Player movement
 - [x] Take screenshots
-- [ ] Craft items
+- [x] Craft items
 - [ ] Place items
 - [ ] Pick up items
 - [x] Send chat message
-- [ ] Set research
+- [x] Set research
 - [ ] Server controllable cooldowns
 
 ## Setup
-### Dependencie
+### Dependencies
 - `python 3.6 or higher`
 - `discord.py`
 - `pyautogui`
