@@ -112,24 +112,42 @@ class FactorioHelper(commands.Cog):
                               "Accepted values for `<rotation>` and `<direction>` are: "
                               "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
         embed.add_field(name="!pick_up <direction> <distance>",
-                        value="Picks up a item from the factorio grid\n"
+                        value="Picks up a item from the factorio grid.\n"
                               "Adjust the position of the item to pick up relative to the player, by specifying the "
                               "`<distance>` away from player in a `<direction>`.\n"
-                              "Accepted values for `<direction>` is: \n"
+                              "Accepted values for `<direction>` are: \n"
                               "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. "
                         )
         embed.add_field(name="!craft <item-to-craft> <count>",
                         value="Crafts the `<count>` of `<item-to-craft>`.\n"
-                              "Accepted values for `<item-to-craft>` is:\n"
-                              "A item name with spaces replaced with `-` should work. `!crafting_help` will dm you a "
-                              "list of all possible commands."
+                              "Accepted values for `<item-to-craft>` are:\n"
+                              "An item name with spaces replaced with `-` should work. `!crafting_help` will dm you a "
+                              "list of all possible recipes."
                         )
         embed.add_field(name="!view_inventory",
-                        value="Sends a screenshot of your inventory."
+                        value="Sends a screenshot of character inventory."
                         )
         embed.add_field(name="!view_tech",
                         value="Sends a screenshot of the current tech tree."
+                              
                         )
+        embed.add_field(name="!research [tech]", 
+                        value="Sets current research to a specified `[tech]`.\n"
+                              "Accepted values for `[tech]` are:"
+                              "A technology name with spaces replaced with `-` should work. `!reseach_help` will dm you a "
+                              "list of all possible technologies.\n"
+                              "`!research stop` will stop current research.\n"
+                              "Leaving `[tech]` **blank** will be interpreted the same as `!research stop`"
+                        )
+        embed.add_field(name="!config <command> <cooldownUse> <value>",
+                        value="Changes the cooldown configuration values in `config.json`\n"
+                              "Sets a `'cooldown'` or `'use'` `value` for a given `<command>`.\n"
+                              "Uses are the amount of times a command can be used before a cooldown is triggered.\n"
+                              "Cooldown is duration in seconds in which the command cannot be executed by a user.\n"
+                              "Accepted values for `<cooldownUse>` are:\n"
+                              "`cooldown`, `use`, `uses` or `cd`, `u`."
+                        )
+       
 
         await ctx.author.send(embed=embed)
 
