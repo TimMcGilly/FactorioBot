@@ -140,27 +140,6 @@ class FactorioControl(commands.Cog):
                 "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
                 "all the items")
 
-    # Test command
-    @commands.command()
-    async def long_command(self, ctx):
-        print("long command")
-        await self.enqueue(self.exec_long_command, ctx, "dave")
-
-    @commands.command()
-    async def mod_output_test(self, ctx, *, message):
-        await self.enqueue(self.exec_mod_output_test, ctx, message)
-
-    @commands.cooldown(*helper.get_config('craft'))
-    @commands.command()
-    async def craft_item(self, ctx, item, count):
-        await self.enqueue(self.exec_craft_item, ctx, item, count)
-
-    @commands.command()
-    @commands.cooldown(*helper.get_config('research'))
-    async def research(self, ctx, tech: str = None):
-        await self.enqueue(self.exec_research, ctx, tech)
-
-        
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -203,15 +182,6 @@ class FactorioControl(commands.Cog):
         else:
             output = "Successfully placed " + item
 
-        await ctx.send(output)
-
-    # Test exec
-    async def exec_long_command(self, ctx, bob):
-        await asyncio.sleep(2)
-        await ctx.send(bob)
-
-    async def exec_mod_output_test(self, ctx, message):
-        output = await helper.SendFactorioCommand('write_test_d', message)
         await ctx.send(output)
 
 
