@@ -1,4 +1,5 @@
 FactorioBot/.env
+.env
 FactorioBot/config.py
 FactorioBot/discord.log
 .idea/
