@@ -29,7 +29,26 @@ class Bot(commands.Bot):
         print('Message from {0.author}: {0.content}'.format(message))
         await self.process_commands(message)
 
-    async def load_cogs(self,names):
+    async def on_command_error(self, ctx, exception):
+        if isinstance(exception, commands.NoPrivateMessage):
+            await ctx.send("\N{WARNING SIGN} Sorry, you can't use this command in a private message!")
+
+        elif isinstance(exception, commands.CommandNotFound):
+            await ctx.send("\N{WARNING SIGN} That command doesn't exist!")
+
+        elif isinstance(exception, commands.DisabledCommand):
+            await ctx.send("\N{WARNING SIGN} Sorry, this command is disabled!")
+
+        elif isinstance(exception, commands.CommandOnCooldown):
+            await ctx.send(f"{ctx.author.mention} slow down! Try that again in {exception.retry_after:.1f} seconds")
+
+        elif isinstance(exception, commands.MissingRequiredArgument) or isinstance(exception, commands.BadArgument):
+            await ctx.send(f"\N{WARNING SIGN} {exception}")
+
+        elif isinstance(exception, commands.CommandInvokeError):
+            raise exception
+
+    async def load_cogs(self, names):
         for name in names:
             self.load_extension(name)
 
