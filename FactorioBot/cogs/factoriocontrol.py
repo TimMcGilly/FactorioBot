@@ -158,6 +158,16 @@ class FactorioControl(commands.Cog):
                 "all the items")
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('place'))
+    async def pick_up(self, ctx, direction="N", distance: int = 1):
+        # Direction validation
+        direction = helper.get_valid_direction(direction)
+        if direction is not None:
+            await self.enqueue(self.exec_pick_up, ctx, direction, distance)
+        else:
+            await ctx.send("Please enter a valid direction")
+
+    @commands.command()
     @commands.cooldown(*helper.get_config('view_gui'))
     async def view_inventory(self, ctx):
         await self.enqueue(self.exec_view_inventory, ctx, screenshot=False)
@@ -207,6 +217,13 @@ class FactorioControl(commands.Cog):
             await ctx.send("A error occurred.")
         else:
             output = "Successfully placed " + item
+
+        await ctx.send(output)
+
+    async def exec_pick_up(self, ctx, direction, distance):
+        output = await helper.SendFactorioCommand("pick_up_item_d", direction, str(distance))
+        if output.startswith("ERROR"):
+            await ctx.send("A error occurred.")
 
         await ctx.send(output)
 

@@ -14,7 +14,7 @@ A large group of players should be able to each send the factorio players a few 
 - [x] Take screenshots
 - [x] Craft items
 - [ ] Place items
-- [ ] Pick up items
+- [x] Pick up items
 - [x] Send chat message
 - [x] Set research
 - [ ] Server controllable cooldowns
