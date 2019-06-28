@@ -1,5 +1,7 @@
 import io
 import asyncio
+import os
+
 from discord.ext import commands
 import discord
 import FactorioBot.helper as helper
@@ -73,6 +75,28 @@ class FactorioControl(commands.Cog):
         if len(message) < 100:
             await self.enqueue(self.exec_sayInGame, ctx, message)
 
+    @commands.command()
+    async def craft(self, ctx, item, count):
+        dirname = os.path.dirname(__file__)
+        filename = os.path.join(dirname, '../items.txt')
+
+        if count.isdigit() is False:
+            await ctx.send("That is a invalid number of items to craft.")
+        else:
+            with open(filename, "r") as fp:
+                recipes = fp.readlines()
+            recipes = [x.strip() for x in recipes]
+
+            if item in recipes:
+                await self.enqueue(self.exec_craft, ctx, item, count)
+            else:
+                await ctx.send(
+                    "That is a invalid item to craft.\nPlease check for typos or type `!crafting_help` to get a list of all the items")
+
+    @commands.command()
+    async def research(self, ctx, tech: str = None):
+        await self.enqueue(self.exec_research, ctx, tech)
+
     # Test command
     @commands.command()
     async def long_command(self, ctx):
@@ -83,13 +107,6 @@ class FactorioControl(commands.Cog):
     async def mod_output_test(self, ctx, *, message):
         await self.enqueue(self.exec_mod_output_test, ctx, message)
 
-    @commands.command()
-    async def craft_item(self, ctx, item, count):
-        await self.enqueue(self.exec_craft_item, ctx, item, count)
-
-    @commands.command()
-    async def research(self, ctx, tech:str = None):
-        await self.enqueue(self.exec_research, ctx, tech)
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -99,19 +116,21 @@ class FactorioControl(commands.Cog):
         p.keyUp(key)
 
     async def exec_sayInGame(self, ctx, message):
-        p.press("`")
+        p.press("'")
         p.typewrite(message, interval=0)
         p.press("enter")
         await ctx.send("Message sent.")
 
-    async def exec_craft_item(self, ctx, item, count):
+    async def exec_craft(self, ctx, item, count):
         output = await helper.SendFactorioCommand("craft_item_d", count, item)
         if output.startswith("ERROR"):
             output = "Invalid Command: Requested to craft more than possible or invalid recipe. " \
                      "(please use data.raw recipe names)"
+        else:
+            output = ("Started crafting {0} {1}(s).").format(output, item)
         await ctx.send(output)
 
-    async def exec_research(self,ctx,tech:str = None):
+    async def exec_research(self, ctx, tech: str = None):
         if tech is not None:
             output = await helper.SendFactorioCommand("set_research_d", tech)
         else:
@@ -121,6 +140,7 @@ class FactorioControl(commands.Cog):
             output = "Invalid Command: Invalid technology or unexpected error. " \
                      "(please use data.raw technology names)"
         await ctx.send(output)
+
     # Test exec
     async def exec_long_command(self, ctx, bob):
         await asyncio.sleep(2)
@@ -129,6 +149,7 @@ class FactorioControl(commands.Cog):
     async def exec_mod_output_test(self, ctx, message):
         output = await helper.SendFactorioCommand('write_test_d', message)
         await ctx.send(output)
+
 
 # Setups cog
 def setup(bot):

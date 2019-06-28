@@ -25,9 +25,7 @@ commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg = pcall(craft_item, e)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-                e.player_index)
-    else
-        game.write_file("output.txt", "Started crafting: " .. split_param[2])
+            e.player_index)
     end
 end)
 
@@ -42,13 +40,14 @@ commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
 
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-                e.player_index)
+            e.player_index)
     else
         if isStop then
             game.write_file("output.txt", "Stopped current research.", false,
-                    e.player_index)
+                e.player_index)
         else
-            game.write_file("output.txt", "Started researching: ".. e.parameter)
+            game.write_file("output.txt", "Started researching: " .. e.parameter, false,
+            e.player_index)
         end
     end
 end)
@@ -56,10 +55,13 @@ end)
 function set_research(e)
     game.players[e.player_index].force.current_research = e.parameter
 end
+
 function craft_item(e)
     local split_param = split(e.parameter)
-    local count = game.players[e.player_index].begin_crafting {
+    local count_crafted = game.players[e.player_index].begin_crafting {
         count = split_param[1],
         recipe = split_param[2]
     }
+    game.write_file("output.txt", count_crafted, false,
+            e.player_index)
 end
