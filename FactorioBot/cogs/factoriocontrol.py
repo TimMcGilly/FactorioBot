@@ -49,6 +49,7 @@ class FactorioControl(commands.Cog):
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
     @commands.command()
+    @commands.cooldown(helper.u_walk, helper.cd_walk, commands.BucketType.user)
     async def walk(self, ctx, direction, length: int):
 
         key = None
@@ -69,6 +70,7 @@ class FactorioControl(commands.Cog):
             await ctx.send("Invalid direction or length limit reached.")
 
     @commands.command()
+    @commands.cooldown(helper.u_say_in_game, helper.cd_say_in_game, commands.BucketType.user)
     async def sayInGame(self, ctx, *, message):
         if len(message) < 100:
             await self.enqueue(self.exec_sayInGame, ctx, message)
@@ -84,10 +86,12 @@ class FactorioControl(commands.Cog):
         await self.enqueue(self.exec_mod_output_test, ctx, message)
 
     @commands.command()
+    @commands.cooldown(helper.u_craft_item, helper.cd_craft_item, commands.BucketType.user)
     async def craft_item(self, ctx, item, count):
         await self.enqueue(self.exec_craft_item, ctx, item, count)
 
     @commands.command()
+    @commands.cooldown(helper.u_research, helper.cd_research, commands.BucketType.user)
     async def research(self, ctx, tech:str = None):
         await self.enqueue(self.exec_research, ctx, tech)
     '''Executes the commands in factorio'''

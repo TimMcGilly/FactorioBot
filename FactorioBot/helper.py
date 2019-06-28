@@ -14,6 +14,7 @@ async def SendFactorioCommand(command: str, *args):
     output = await read_ouput_txt(observer)
     return output
 
+
 def setup_read_txt():
     dirpath = config.factorio_user_data + "\script-output"
     dirpath = os.path.expandvars(dirpath)
@@ -25,6 +26,7 @@ def setup_read_txt():
         observer.schedule(read_on_modified, dirpath, recursive=False)
         observer.start()
         return observer
+
 
 async def read_ouput_txt(observer: Observer):
     path = config.factorio_user_data + '\script-output\output.txt'
@@ -48,3 +50,16 @@ class ReadOnModified(FileSystemEventHandler):
 
         if event.src_path == self.file_to_check:
             self.observer.stop()
+
+
+'''Define cooldowns and uses'''
+
+cd_walk = 15
+cd_say_in_game = 5
+cd_craft_item = 10
+cd_research = 10
+
+u_walk = 2
+u_say_in_game = 1
+u_craft_item = 1
+u_research = 2
