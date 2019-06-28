@@ -11,7 +11,7 @@ A large group of users should be able to each send commands to a factorio charac
 
 This bot is a bit of a hack.
 
-# Planned features
+# Features
 ## Factorio Interactions
 - [x] Player movement
 - [x] Craft items
@@ -54,6 +54,11 @@ pip install requirements.txt
 5. Run main.py (FactorioBot directory)
 6. Enjoy!
 
+# Technical
+![Component Diagram][technical-diagram.png]
+
+
 [header-image.png]: https://i.imgur.com/ZW2V92t.png
+[technical-diagram.png]: https://i.imgur.com/cyJ808U.png
 
 
