@@ -103,6 +103,10 @@ def setup_config():
                 "research": {
                     "uses": 1,
                     "cooldown": 1
+                },
+                "place": {
+                    "uses": 3,
+                    "cooldown": 1
                 }
             }
         }
