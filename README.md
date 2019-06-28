@@ -58,7 +58,7 @@ pip install requirements.txt
 ![Component Diagram][technical-diagram.png]
 
 
-[header-image.png]: https://i.imgur.com/ZW2V92t.png
+[header-image.png]: https://cdn.discordapp.com/attachments/407617128112324629/594294628031922192/bot_banner.png
 [technical-diagram.png]: https://i.imgur.com/cyJ808U.png
 
 
