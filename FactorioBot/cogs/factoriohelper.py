@@ -35,6 +35,8 @@ class FactorioHelper(commands.Cog):
         helper.set_config(command, cooldownUse, parsedVal)
         self.bot.unload_extension("cogs.factoriocontrol")
         self.bot.load_extension("cogs.factoriocontrol")
+        await ctx.send(command.capitalize() + " " + cooldownUse + " is now set to " + str(parsedVal) + " "
+                       + outputNoun + ".")
 
     @commands.command()
     async def crafting_help(self, ctx):
