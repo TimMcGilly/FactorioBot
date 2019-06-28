@@ -70,7 +70,7 @@ Next we started work on a lua mod as that was required to allow us to craft item
 To return data back to the python bot we use a method seen in [Clusterio](https://github.com/Danielv123/factorioClusterio) of logging output to `script-output/` and then reading it from our code. Here we had to implement a file watch using the library `watchdog` to fix a race condition where discord read the log file before our mod wrote it.
 
 ## Current state
-###Discord Bot
+### Discord Bot
 * `factoriocontrol.py`
     * Contains the command queue which has the `enqueue` function to add commands to the end of the queue. The command queue is non blocking so other commands from discord can be still handled and added to it. The first function has the command name and then in the command queue you pass in the function with `exec` in front of it (for example `exec_walk`) which is the function called when it is at the top of the command queue.
     * Contains all the discord.py commands which register on the command queue and are called by user to control factorio.
@@ -93,6 +93,9 @@ To return data back to the python bot we use a method seen in [Clusterio](https:
         * `setup_read_txt` sets up a file watch on `output.txt` and returns a observer.
         * `read_ouput_txt` waits for the watch and then read the full file safely and returns it.
     * `get_valid_direction` takes in a input and returns a valid single character direction or `None` if none exists.
+      * `setup_config` creates a JSON file with default settings for cooldowns
+      * `get_config` returns a cooldown configuration for a specific key (command/group) from the JSON config
+      * `set_config` changes an attribute in a cooldown configuration for a specific key in the JSON config
      
 
 [header-image.png]: https://cdn.discordapp.com/attachments/407617128112324629/594294628031922192/bot_banner.png
