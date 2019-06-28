@@ -32,7 +32,7 @@ class FactorioControl(commands.Cog):
 
         while self.command_queue:
             # Gets next function and args to execute
-            current_command = self.command_queue.pop()
+            current_command = self.command_queue.pop(0)
 
             # Calls function which is first index and unpacks the arguments and pass them into the function.
             await current_command[0](*current_command[1:])
