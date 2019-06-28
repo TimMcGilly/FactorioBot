@@ -13,13 +13,17 @@ class FactorioHelper(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def config(self, ctx, command, cooldownUse, val: str):
+    @commands.has_permissions(administrator=True)
+    async def config(self, ctx, command: str, cooldownUse, val: str):
+
         if cooldownUse == 'cooldown' or cooldownUse == 'cd':
             cooldownUse = 'cooldown'
-        elif cooldownUse == 'use' or cooldownUse == 'u':
-            cooldownUse = 'use'
+            outputNoun = 'seconds'
+        elif cooldownUse == 'use' or cooldownUse == 'u' or cooldownUse == 'uses':
+            cooldownUse = 'uses'
+            outputNoun = 'times'
         else:
-            await ctx.send("Invalid argument. Valid arguments: `cooldown`, `cd`, `use`, `u`.")
+            await ctx.send("Invalid argument. Valid arguments: `cooldown`, `cd`, `uses`, `u`.")
             return
 
         if val.isdigit():

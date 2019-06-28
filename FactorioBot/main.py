@@ -39,6 +39,9 @@ class Bot(commands.Bot):
         elif isinstance(exception, commands.DisabledCommand):
             await ctx.send("\N{WARNING SIGN} Sorry, this command is disabled!")
 
+        elif isinstance(exception, commands.MissingPermissions):
+            await ctx.send(f"\N{WARNING SIGN} You do not have permissions to use this command.")
+
         elif isinstance(exception, commands.CommandOnCooldown):
             await ctx.send(f"{ctx.author.mention} slow down! Try that again in {exception.retry_after:.1f} seconds")
 
