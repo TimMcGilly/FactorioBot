@@ -70,10 +70,11 @@ class FactorioControl(commands.Cog):
             await ctx.send("Invalid direction or length limit reached.")
 
     @commands.command()
-    @commands.cooldown(helper.u_say_in_game, helper.cd_say_in_game, commands.BucketType.user)
-    async def sayInGame(self, ctx, *, message):
+    async def say(self, ctx, *, message):
         if len(message) < 100:
-            await self.enqueue(self.exec_sayInGame, ctx, message)
+            await self.enqueue(self.exec_say, ctx, message)
+
+
 
     # Test command
     @commands.command()
@@ -102,7 +103,7 @@ class FactorioControl(commands.Cog):
         await asyncio.sleep(length)
         p.keyUp(key)
 
-    async def exec_sayInGame(self, ctx, message):
+    async def exec_say(self, ctx, message):
         p.press("`")
         p.typewrite(message, interval=0)
         p.press("enter")
