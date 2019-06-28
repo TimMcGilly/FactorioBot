@@ -57,6 +57,17 @@ pip install requirements.txt
 # Technical
 ![Component Diagram][technical-diagram.png]
 
+## Journey
+We originally looked at having the bot communicate directly with a mod over a internet connection similar to here [Clusterio](https://github.com/Danielv123/factorioClusterio) and the concept in this [reddit](https://www.reddit.com/r/factorio/comments/5g3qiz/modding_how_to_make_internet_connected_mods_like/) post.
+
+They work through RCON and writing to a log file. 
+However we quickly found that movement through the factorio lua api would be extremely difficult to implement. To solve this challenge, we decided to make python act as a macro controlling the keyboard and mouse into factorio allow us to implement walking very easily.
+
+A fun challenge we encountered was that commands to control factorio were running at the same time and conflicting with each other. To solve this we designed a command queue which queue the commands from users asynchronously until all previous commands have been run.
+
+Next we started work on a lua mod as that was required to allow us to craft items and complete other task in the game such as setting research and placing items. We had some initial challenges learning the api and how to interact with it. Initially we again explored RCON to communicate with the lua api and also hacking on_console_chat however both options were messy. On further research we discovered that we could add custom commands which we could trigger from pyautogui.  
+
+To return data back to the python bot we use a method seen in [Clusterio](https://github.com/Danielv123/factorioClusterio) of logging output to `script-output/` and then reading it from our code. Here we had to implement a file watch using the library `watchdog` to fix a race condition where discord read the log file before our mod wrote it.
 
 [header-image.png]: https://i.imgur.com/ZW2V92t.png
 [technical-diagram.png]: https://i.imgur.com/cyJ808U.png
