@@ -83,6 +83,10 @@ class FactorioControl(commands.Cog):
     async def mod_output_test(self, ctx, *, message):
         await self.enqueue(self.exec_mod_output_test, ctx, message)
 
+    @commands.command()
+    async def craft_item(self, ctx, item, count):
+        await self.enqueue(self.exec_craft_item, ctx, item, count)
+
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -97,6 +101,11 @@ class FactorioControl(commands.Cog):
         p.press("enter")
         await ctx.send("Message sent.")
 
+    async def exec_craft_item(self, ctx, item, count):
+        output = await helper.SendFactorioCommand("craft_item_d", count, item)
+        if output.startswith("ERROR"):
+            output = "Invalid Command: Requested to craft more than possible or invalid recipe."
+        await ctx.send(output)
     # Test exec
     async def exec_long_command(self, ctx, bob):
         await asyncio.sleep(2)
