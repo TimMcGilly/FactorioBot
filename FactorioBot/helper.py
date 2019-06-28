@@ -107,6 +107,10 @@ def setup_config():
                 "place": {
                     "uses": 3,
                     "cooldown": 1
+                },
+                "view_gui":{
+                    "uses": 1,
+                    "cooldown": 15
                 }
             }
         }

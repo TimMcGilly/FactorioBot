@@ -153,6 +153,16 @@ class FactorioControl(commands.Cog):
                 "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
                 "all the items")
 
+    @commands.command()
+    @commands.cooldown(*helper.get_config('view_gui'))
+    async def view_inventory(self,ctx):
+        await self.enqueue(self.exec_view_inventory, ctx)
+
+    @commands.command()
+    @commands.cooldown(*helper.get_config('view_gui'))
+    async def view_tech(self, ctx):
+        await self.enqueue(self.exec_view_tech, ctx)
+       
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -195,6 +205,17 @@ class FactorioControl(commands.Cog):
             output = "Successfully placed " + item
 
         await ctx.send(output)
+    
+    async def exec_view_inventory(self,ctx):
+        p.press("e")
+        await self.screenshot(ctx)
+        p.press("e")
+        await asyncio.sleep(0.5)
+    async def exec_view_tech(self,ctx):
+        p.press("t")
+        await self.screenshot(ctx)
+        p.press("t")
+        await asyncio.sleep(0.5)
 
 
 # Setups cog
