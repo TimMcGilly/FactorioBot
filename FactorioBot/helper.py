@@ -11,7 +11,8 @@ async def SendFactorioCommand(command: str, *args):
     p.press("`")
     p.typewrite("/" + command + " " + " ".join(args), interval=0)
     p.press("enter")
-    return await read_ouput_txt(observer)
+    output = await read_ouput_txt(observer)
+    return output
 
 def setup_read_txt():
     dirpath = config.factorio_user_data + "\script-output"
