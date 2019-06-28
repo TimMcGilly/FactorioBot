@@ -69,6 +69,24 @@ Next we started work on a lua mod as that was required to allow us to craft item
 
 To return data back to the python bot we use a method seen in [Clusterio](https://github.com/Danielv123/factorioClusterio) of logging output to `script-output/` and then reading it from our code. Here we had to implement a file watch using the library `watchdog` to fix a race condition where discord read the log file before our mod wrote it.
 
+## Current state
+###Discord Bot
+* `factoriocontrol.py`
+    * Contains the command queue which has the `enqueue` function to add commands to the end of the queue. The command queue is non blocking so other commands from discord can be still handled and added to it. The first function has the command name and then in the command queue you pass in the function with `exec` in front of it (for example `exec_walk`) which is the function called when it is at the top of the command queue.
+    * Contains all the discord.py commands which register on the command queue and are called by user to control factorio.
+        * !walk
+        * !craft
+        * !say
+        * !place
+        * !pick_up
+        * !research
+        * !view_inventory
+        * !view_tech
+* `factoriohelper.py`
+    * Contains user commands which are not bound to command queue so can be called and immediately executed at any time.
+        * !crafting_help
+        * !research_help
+        * !config
 [header-image.png]: https://i.imgur.com/ZW2V92t.png
 [technical-diagram.png]: https://i.imgur.com/cyJ808U.png
 
