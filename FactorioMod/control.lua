@@ -38,6 +38,14 @@ commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
     end
 end)
 
+commands.add_command("get_research_d", DISCORD_HELP_MESSAGE, function(e)
+    s = ""
+    for k,v in pairs(game.players[e.player_index].force.technologies) do
+        s = s .. "\n" .. v.name
+    end
+    game.write_file("output.txt", s, false, e.player_index)
+end)
+
 commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
     local isStop = false
     if e.parameter == "" or e.parameter == "stop" or e.parameter == nil then
