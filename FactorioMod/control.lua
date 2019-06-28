@@ -67,24 +67,38 @@ commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
     if e.parameter == "" or e.parameter == "stop" or e.parameter == nil then
         e.parameter = nil
         isStop = true
+    elseif get_tech_enabled(game.players[e.player_index].force.technologies[e.parameter]) == true then
+
+        local status, errorMsg = pcall(set_research, e)
+
+        if status == false then
+            game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
+                    e.player_index)
+        else
+            if isStop then
+                game.write_file("output.txt", "Stopped current research.", false,
+                        e.player_index)
+            else
+                game.write_file("output.txt",
+                        "Started researching: " .. e.parameter, false,
+                        e.player_index)
+            end
+        end
+    else
+        game.write_file("output.txt", "Technology is unavailable. Please research prerequisite technologies first.",
+                false, e.player_index)
     end
 
-    local status, errorMsg = pcall(set_research, e)
+end)
 
-    if status == false then
-        game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
-    else
-        if isStop then
-            game.write_file("output.txt", "Stopped current research.", false,
-                e.player_index)
-        else
-            game.write_file("output.txt",
-                "Started researching: " .. e.parameter, false,
-                e.player_index)
+function get_tech_enabled(tech)
+    for k,v in pairs(tech.prerequisites) do
+        if v.researched == false then
+            return false
         end
     end
-end)
+    return true
+end
 
 commands.add_command("place_item_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg = pcall(place_item, e)
