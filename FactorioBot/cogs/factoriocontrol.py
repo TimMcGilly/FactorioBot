@@ -51,6 +51,7 @@ class FactorioControl(commands.Cog):
         await ctx.send(file=discord.File(fp=imgbytes, filename="file.jpg"))
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('walk'))
     async def walk(self, ctx, direction, length: int):
 
         key = None
@@ -72,9 +73,10 @@ class FactorioControl(commands.Cog):
             await ctx.send("Invalid direction or length limit reached.")
 
     @commands.command()
-    async def sayInGame(self, ctx, *, message):
+    @commands.cooldown(*helper.get_config('say'))
+    async def say(self, ctx, *, message):
         if len(message) < 100:
-            await self.enqueue(self.exec_sayInGame, ctx, message)
+            await self.enqueue(self.exec_say, ctx, message)
 
     @commands.command()
     async def craft(self, ctx, item, count):
@@ -133,6 +135,17 @@ class FactorioControl(commands.Cog):
     async def mod_output_test(self, ctx, *, message):
         await self.enqueue(self.exec_mod_output_test, ctx, message)
 
+    @commands.cooldown(*helper.get_config('craft'))
+    @commands.command()
+    async def craft_item(self, ctx, item, count):
+        await self.enqueue(self.exec_craft_item, ctx, item, count)
+
+    @commands.command()
+    @commands.cooldown(*helper.get_config('research'))
+    async def research(self, ctx, tech: str = None):
+        await self.enqueue(self.exec_research, ctx, tech)
+
+        
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -141,8 +154,9 @@ class FactorioControl(commands.Cog):
         await asyncio.sleep(length)
         p.keyUp(key)
 
-    async def exec_sayInGame(self, ctx, message):
-        p.press("'")
+
+    async def exec_say(self, ctx, message):
+        p.press("`")
         p.typewrite(message, interval=0)
         p.press("enter")
         await ctx.send("Message sent.")
