@@ -79,6 +79,7 @@ class FactorioControl(commands.Cog):
             await self.enqueue(self.exec_say, ctx, message)
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('craft'))
     async def craft(self, ctx, item, count):
         dirname = os.path.dirname(__file__)
         filename = os.path.join(dirname, '../items.txt')
@@ -97,10 +98,12 @@ class FactorioControl(commands.Cog):
                     "That is a invalid item to craft.\nPlease check for typos or type `!crafting_help` to get a list of all the items")
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('craft'))
     async def research(self, ctx, tech: str = None):
         await self.enqueue(self.exec_research, ctx, tech)
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('place'))
     async def place(self, ctx, item, direction="N", distance: int = 1, rotation="N"):
         # Item validation
         dirname = os.path.dirname(__file__)
