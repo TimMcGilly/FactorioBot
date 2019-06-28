@@ -60,7 +60,8 @@ class FactorioHelper(commands.Cog):
     async def research_help(self, ctx):
         embed = discord.Embed(title="Research Help", description="These are all the possible techs to research.\n More "
                                                                  "info at https://stable.wiki.factorio.com/Data.raw. "
-                                                                 "Anything under `technology` should work. ", color=0x00ff00)
+                                                                 "Anything under `technology` should work. ",
+                              color=0x00ff00)
         dirname = os.path.dirname(__file__)
         filename = os.path.join(dirname, '../techs.txt')
         with open(filename, "r") as fp:
@@ -79,6 +80,7 @@ class FactorioHelper(commands.Cog):
             embed.add_field(name="Techs part " + str(count), value=stringBuilder, inline=False)
 
         await ctx.author.send(embed=embed)
+
 
 # Setups cog
 def setup(bot):

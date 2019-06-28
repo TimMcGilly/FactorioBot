@@ -18,9 +18,13 @@ class FactorioControl(commands.Cog):
 
     '''Queue functions'''
 
-    async def enqueue(self, func_name, ctx, *args):
+    async def enqueue(self, func_name, ctx, *args, **kwargs):
+        if 'screenshot' in kwargs:
+            screenshot_flag = kwargs['screenshot']
+        else:
+            screenshot_flag = True
         # Adds the message id, function name, ctx and arguments as a flat list to end of queue
-        self.command_queue.append([func_name, ctx, *args])
+        self.command_queue.append([screenshot_flag, func_name, ctx, *args])
 
         # Starts executing queue if not already
         if not self.currently_executing:
@@ -35,9 +39,10 @@ class FactorioControl(commands.Cog):
             current_command = self.command_queue.pop(0)
 
             # Calls function which is second index and unpacks the arguments and pass them into the function.
-            await current_command[0](*current_command[1:])
+            await current_command[1](*current_command[2:])
 
-            await self.screenshot(current_command[1])
+            if current_command[0]:
+                await self.screenshot(current_command[2])
 
         self.currently_executing = False
 
@@ -57,7 +62,7 @@ class FactorioControl(commands.Cog):
                               description="Queue of factorio commands to be run.", color=0x00ff00)
         for counter, item in enumerate(self.command_queue):
             # Set name to place in queue and content to the person message with prefix stripped
-            embed.add_field(name=str(counter + 1) + ".", value=item[1].message.content.strip(item[1].prefix))
+            embed.add_field(name=str(counter + 1) + ".", value=item[2].message.content.strip(item[2].prefix))
 
         print(self.command_queue)
 
@@ -126,7 +131,6 @@ class FactorioControl(commands.Cog):
             await ctx.send(
                 "Invalid Argument: Specified research name not found.\nPlease check for typos or type `!research_help` to get a list of all the techs.")
 
-
     @commands.command()
     @commands.cooldown(*helper.get_config('place'))
     async def place(self, ctx, item, direction="N", distance: int = 1, rotation="N"):
@@ -155,14 +159,14 @@ class FactorioControl(commands.Cog):
 
     @commands.command()
     @commands.cooldown(*helper.get_config('view_gui'))
-    async def view_inventory(self,ctx):
-        await self.enqueue(self.exec_view_inventory, ctx)
+    async def view_inventory(self, ctx):
+        await self.enqueue(self.exec_view_inventory, ctx, screenshot=False)
 
     @commands.command()
     @commands.cooldown(*helper.get_config('view_gui'))
     async def view_tech(self, ctx):
-        await self.enqueue(self.exec_view_tech, ctx)
-       
+        await self.enqueue(self.exec_view_tech, ctx, screenshot=False)
+
     '''Executes the commands in factorio'''
 
     async def exec_walk(self, ctx, direction, key, length):
@@ -205,13 +209,14 @@ class FactorioControl(commands.Cog):
             output = "Successfully placed " + item
 
         await ctx.send(output)
-    
-    async def exec_view_inventory(self,ctx):
+
+    async def exec_view_inventory(self, ctx):
         p.press("e")
         await self.screenshot(ctx)
         p.press("e")
         await asyncio.sleep(0.5)
-    async def exec_view_tech(self,ctx):
+
+    async def exec_view_tech(self, ctx):
         p.press("t")
         await self.screenshot(ctx)
         p.press("t")
