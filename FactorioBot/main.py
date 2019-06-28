@@ -59,6 +59,7 @@ class Bot(commands.Bot):
 async def run():
     helper.setup_config()
     bot = Bot()
+    bot.remove_command('help')
 
     await bot.load_cogs(["cogs.factoriocontrol", "cogs.factoriohelper"])
 

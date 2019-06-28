@@ -87,6 +87,32 @@ class FactorioHelper(commands.Cog):
 
         await ctx.author.send(embed=embed)
 
+    @commands.command()
+    async def help(self, ctx):
+        author = ctx.author
+
+        embed = discord.Embed(
+            colour= discord.Colour.blurple()
+        )
+        embed.set_author(
+            name='Help',
+            icon_url=
+            "https://cdn.discordapp.com/attachments/407617128112324629/594297916743614474/factorio_bot_blurple_logo.png")
+        embed.add_field(name="!help", value="Returns this help message")
+        embed.add_field(name="!walk <direction> <length>",
+                        value="Moves the character in a given `<direction>` for a `<length>` number of seconds.\n"
+                              "Accepted values for direction are: `n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
+        embed.add_field(name="!say <message>",
+                        value="Says the given `<message>` in the factorio chat. Useful for multiplayer.")
+        embed.add_field(name="!place <item> <direction> <distance> <rotation>",
+                        value="Places an `<item>` from the inventory on the factorio grid.\n"
+                              "Adjust the position of the object relative to the player, by specifying"
+                              " the `<distance>` away from player in a `<direction>`. \n"
+                              "Adjust the `<rotation>` of the object by specifying which side the object has to face. \n"
+                              "Accepted values for `<rotation>` and `<direction>` are: "
+                              "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
+
+        await ctx.author.send(embed=embed)
 
 # Setups cog
 def setup(bot):
