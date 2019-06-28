@@ -92,7 +92,7 @@ class FactorioHelper(commands.Cog):
         author = ctx.author
 
         embed = discord.Embed(
-            colour= discord.Colour.blurple()
+            colour=discord.Colour.blurple()
         )
         embed.set_author(
             name='Help',
@@ -111,8 +111,28 @@ class FactorioHelper(commands.Cog):
                               "Adjust the `<rotation>` of the object by specifying which side the object has to face. \n"
                               "Accepted values for `<rotation>` and `<direction>` are: "
                               "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
+        embed.add_field(name="!pick_up <direction> <distance>",
+                        value="Picks up a item from the factorio grid\n"
+                              "Adjust the position of the item to pick up relative to the player, by specifying the "
+                              "`<distance>` away from player in a `<direction>`.\n"
+                              "Accepted values for `<direction>` is: \n"
+                              "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. "
+                        )
+        embed.add_field(name="!craft <item-to-craft> <count>",
+                        value="Crafts the `<count>` of `<item-to-craft>`.\n"
+                              "Accepted values for `<item-to-craft>` is:\n"
+                              "A item name with spaces replaced with `-` should work. `!crafting_help` will dm you a "
+                              "list of all possible commands."
+                        )
+        embed.add_field(name="!view_inventory",
+                        value="Sends a screenshot of your inventory."
+                        )
+        embed.add_field(name="!view_tech",
+                        value="Sends a screenshot of the current tech tree."
+                        )
 
         await ctx.author.send(embed=embed)
+
 
 # Setups cog
 def setup(bot):
