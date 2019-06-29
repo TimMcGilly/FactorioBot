@@ -87,10 +87,49 @@ class FactorioHelper(commands.Cog):
 
         await ctx.author.send(embed=embed)
 
-    @commands.command()
-    async def help(self, ctx):
-        author = ctx.author
+    def get_help_values(self, command_input=None):
+        help_dict = [
+            {"command": "walk",
+             "args": "!walk <direction> <length>",
+             "message": "Accepted values for direction are: `n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. "
+             },
+            {"command": "say",
+             "args": "!say <message>",
+             "message": "Says the given `<message>` in the factorio chat. Useful for multiplayer."
+             },
+            {"command": "place <item> <direction> <distance> <rotation>",
+             "args": "!place <item> <direction> <distance> <rotation>",
+             "message": "Places an `<item>` from the inventory on the factorio grid.\n Adjust the position of the "
+                        "object relative to the player, by specifyingthe `<distance>` away from player in a "
+                        "`<direction>`. \nAdjust the `<rotation>` of the object by specifying which side the object "
+                        "has to face. \nAccepted values for `<rotation>` and `<direction>` are: `n`, `e`, `w`, "
+                        "`s` or `north`, `east`, `west`, `south`. "
+             },
+            {"command": "craft",
+             "args": "!craft <item-to-craft> <count>",
+             "message": "Crafts the `<count>` of `<item-to-craft>`.\n"
+                        "Accepted values for `<item-to-craft>` is:\n"
+                        "A item name with spaces replaced with `-` should work. `!crafting_help` will dm you a "
+                        "list of all possible commands."
+             },
+            {"command": "view_inventory",
+             "args": "!view_inventory",
+             "message": "Sends a screenshot of your inventory.\n"
+             },
+            {"command": "view_tech",
+             "args": "!view_tech",
+             "message": "Sends a screenshot of the current tech tree.\n"
+             }
+        ]
+        if command_input is None:
+            return help_dict
+        else:
+            for item in help_dict:
+                if item["command"] == command_input:
+                    return item
 
+    @commands.command()
+    async def help(self, ctx, command_input = None):
         embed = discord.Embed(
             colour=discord.Colour.blurple()
         )
@@ -98,39 +137,14 @@ class FactorioHelper(commands.Cog):
             name='Help',
             icon_url=
             "https://cdn.discordapp.com/attachments/407617128112324629/594297916743614474/factorio_bot_blurple_logo.png")
-        embed.add_field(name="!help", value="Returns this help message")
-        embed.add_field(name="!walk <direction> <length>",
-                        value="Moves the character in a given `<direction>` for a `<length>` number of seconds.\n"
-                              "Accepted values for direction are: `n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
-        embed.add_field(name="!say <message>",
-                        value="Says the given `<message>` in the factorio chat. Useful for multiplayer.")
-        embed.add_field(name="!place <item> <direction> <distance> <rotation>",
-                        value="Places an `<item>` from the inventory on the factorio grid.\n"
-                              "Adjust the position of the object relative to the player, by specifying"
-                              " the `<distance>` away from player in a `<direction>`. \n"
-                              "Adjust the `<rotation>` of the object by specifying which side the object has to face. \n"
-                              "Accepted values for `<rotation>` and `<direction>` are: "
-                              "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. ")
-        embed.add_field(name="!pick_up <direction> <distance>",
-                        value="Picks up a item from the factorio grid\n"
-                              "Adjust the position of the item to pick up relative to the player, by specifying the "
-                              "`<distance>` away from player in a `<direction>`.\n"
-                              "Accepted values for `<direction>` is: \n"
-                              "`n`, `e`, `w`, `s` or `north`, `east`, `west`, `south`. "
-                        )
-        embed.add_field(name="!craft <item-to-craft> <count>",
-                        value="Crafts the `<count>` of `<item-to-craft>`.\n"
-                              "Accepted values for `<item-to-craft>` is:\n"
-                              "A item name with spaces replaced with `-` should work. `!crafting_help` will dm you a "
-                              "list of all possible commands."
-                        )
-        embed.add_field(name="!view_inventory",
-                        value="Sends a screenshot of your inventory."
-                        )
-        embed.add_field(name="!view_tech",
-                        value="Sends a screenshot of the current tech tree."
-                        )
 
+        if command_input is None:
+            items = self.get_help_values()
+            for item in items:
+                embed.add_field(name=item["args"], value=item["message"])
+        else:
+            item=self.get_help_values(command_input)
+            embed.add_field(name=item["args"], value=item["message"])
         await ctx.author.send(embed=embed)
 
 
