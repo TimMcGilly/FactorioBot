@@ -97,7 +97,7 @@ class FactorioHelper(commands.Cog):
              "args": "!say <message>",
              "message": "Says the given `<message>` in the factorio chat. Useful for multiplayer."
              },
-            {"command": "place <item> <direction> <distance> <rotation>",
+            {"command": "place",
              "args": "!place <item> <direction> <distance> <rotation>",
              "message": "Places an `<item>` from the inventory on the factorio grid.\n Adjust the position of the "
                         "object relative to the player, by specifyingthe `<distance>` away from player in a "
@@ -116,10 +116,41 @@ class FactorioHelper(commands.Cog):
              "args": "!view_inventory",
              "message": "Sends a screenshot of your inventory.\n"
              },
+            {"command": "pick_up",
+             "args": "!pick_up <direction> <distance>",
+             "message": "Picks up a item from the factorio grid.\n"
+                        "Adjust the position of the item to pick up relative to the player, by specifying the "
+                        "<distance> away from player in a <direction>.\n"
+                        "Accepted values for <direction> are: \n"
+                        "n, e, w, s or north, east, west, south. "
+             },
             {"command": "view_tech",
              "args": "!view_tech",
              "message": "Sends a screenshot of the current tech tree.\n"
+             },
+            {"command": "research",
+             "args": "!research [tech]",
+             "message": "Sets current research to a specified `[tech]`.\n"
+                        "Accepted values for `[tech]` are:"
+                        "A technology name with spaces replaced with `-` should work. `!reseach_help` will dm you a "
+                        "list of all possible technologies.\n"
+                        "`!research stop` will stop current research.\n"
+                        "Leaving `[tech]` **blank** will be interpreted the same as `!research stop`"
+             },
+            {"command": "config",
+             "args": "!config <command> <cooldownUse> <value>",
+             "message": "Changes the cooldown configuration values in `config.json`\n"
+                        "Sets a `'cooldown'` or `'use'` `value` for a given `<command>`.\n"
+                        "Uses are the amount of times a command can be used before a cooldown is triggered.\n"
+                        "Cooldown is duration in seconds in which the command cannot be executed by a user.\n"
+                        "Accepted values for `<cooldownUse>` are:\n"
+                        "`cooldown`, `use`, `uses` or `cd`, `u`."
+             },
+            {"command": "output_command_queue",
+             "args": "!output_command_queue",
+             "message": "Output the full command queue to chat so you can made decisions based on which commands are before you..\n"
              }
+
         ]
         if command_input is None:
             return help_dict
@@ -129,7 +160,7 @@ class FactorioHelper(commands.Cog):
                     return item
 
     @commands.command()
-    async def help(self, ctx, command_input = None):
+    async def help(self, ctx, command_input=None):
         embed = discord.Embed(
             colour=discord.Colour.blurple()
         )
@@ -143,7 +174,7 @@ class FactorioHelper(commands.Cog):
             for item in items:
                 embed.add_field(name=item["args"], value=item["message"])
         else:
-            item=self.get_help_values(command_input)
+            item = self.get_help_values(command_input)
             embed.add_field(name=item["args"], value=item["message"])
         await ctx.author.send(embed=embed)
 

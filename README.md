@@ -82,6 +82,7 @@ To return data back to the python bot we use a method seen in [Clusterio](https:
         * !research
         * !view_inventory
         * !view_tech
+        * !output_command_queue
 * `factoriohelper.py`
     * Contains user commands which are not bound to command queue so can be called and immediately executed at any time.
         * !crafting_help
