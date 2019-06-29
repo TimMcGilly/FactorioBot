@@ -173,10 +173,14 @@ class FactorioHelper(commands.Cog):
             items = self.get_help_values()
             for item in items:
                 embed.add_field(name=item["args"], value=item["message"])
+            await ctx.author.send(embed=embed)
         else:
             item = self.get_help_values(command_input)
-            embed.add_field(name=item["args"], value=item["message"])
-        await ctx.author.send(embed=embed)
+            if item is None:
+                await ctx.send("There is no help command which matches. Please try `!help`.")
+            else:
+                embed.add_field(name=item["args"], value=item["message"])
+                await ctx.author.send(embed=embed)
 
 
 # Setups cog
