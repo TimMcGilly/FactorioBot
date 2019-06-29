@@ -177,7 +177,7 @@ class FactorioHelper(commands.Cog):
         else:
             item = self.get_help_values(command_input)
             if item is None:
-                await ctx.send("There is no help command which matches. Please try `!help`.")
+                await ctx.send("Invalid argument: Specified command not found. Please try `!help`.")
             else:
                 embed.add_field(name=item["args"], value=item["message"])
                 await ctx.author.send(embed=embed)
