@@ -21,7 +21,17 @@ function get_position(player, direction, distance)
     elseif direction == "w" then
         x = x - distance
     end
-    return { x, y }
+    return { x = x, y = y }
+end
+
+script.on_init(function()
+    apply_long_reach_settings()
+end)
+
+function apply_long_reach_settings()
+    local reach = 1000
+    game.forces["player"].character_build_distance_bonus = reach
+    game.forces["player"].character_build_distance_bonus = reach
 end
 
 DISCORD_HELP_MESSAGE = "DiscordControl command. DO NOT USE MANUALLY "
@@ -67,40 +77,29 @@ commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
     if e.parameter == "" or e.parameter == "stop" or e.parameter == nil then
         e.parameter = nil
         isStop = true
-    elseif get_tech_enabled(game.players[e.player_index].force.technologies[e.parameter]) == true then
+    end
 
-        local status, errorMsg = pcall(set_research, e)
+    local status, errorMsg = pcall(set_research, e)
 
-        if status == false then
-            game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-                    e.player_index)
+    if status == false then
+        game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
+            e.player_index)
+    else
+        if isStop then
+            game.write_file("output.txt", "Stopped current research.", false,
+                e.player_index)
         else
             game.write_file("output.txt",
-                    "Started researching: " .. e.parameter, false,
-                    e.player_index)
-        end
-    else
-        game.write_file("output.txt", "Technology is unavailable. Please research prerequisite technologies first.",
-                false, e.player_index)
-    end
-    if isStop then
-        set_research(e)
-        game.write_file("output.txt", "Stopped current research.", false,
+                "Started researching: " .. e.parameter, false,
                 e.player_index)
+        end
     end
 end)
 
-function get_tech_enabled(tech)
-    for k,v in pairs(tech.prerequisites) do
-        if v.researched == false then
-            return false
-        end
-    end
-    return true
-end
-
 commands.add_command("place_item_d", DISCORD_HELP_MESSAGE, function(e)
-    local status, errorMsg = pcall(place_item, e)
+    local split_param = split(e.parameter)
+
+    local status, errorMsg = pcall(place_item, e, split_param)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
             e.player_index)
@@ -112,6 +111,18 @@ commands.add_command("pick_up_item_d", DISCORD_HELP_MESSAGE, function(e)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
             e.player_index)
+    end
+end)
+
+commands.add_command("place_row_d", DISCORD_HELP_MESSAGE, function(e)
+    local split_param = split(e.parameter)
+    local count = tonumber(split_param[5])
+    local offset = tonumber(split_param[6])
+    local status, errorMsg
+    local event = e
+    for i = 1, count do
+        split_param[3] = split_param[3] + offset
+        place_item(event, split_param)
     end
 end)
 
@@ -128,55 +139,29 @@ function craft_item(e)
     game.write_file("output.txt", count_crafted, false, e.player_index)
 end
 
-function place_item(e)
-    local split_param = split(e.parameter)
+function place_item(e, split_param)
     local item = split_param[1]
     local direction = split_param[2]
     local distance = split_param[3]
     local rotation = split_param[4]
     local player = game.players[e.player_index]
-
     if player.get_item_count(item) > 0 then
         local stack = player.cursor_stack
         stack.set_stack({ name = item, count = 1 })
 
-        local x = player.position.x
-        local y = player.position.y
-        if direction == "n" then
-            y = y - distance
-        elseif direction == "s" then
-            y = y + distance
-        elseif direction == "e" then
-            x = x + distance
-        elseif direction == "w" then
-            x = x - distance
-        end
+        local place_position = get_position(player, direction, distance)
 
-        local place_position = { x, y }
-
-
-        if rotation == "n" then
-            local place_rotation = { defines.direction.north }
-        elseif rotation == "s" then
-            local place_rotation = { defines.direction.south }
-        elseif rotation == "e" then
-            local place_rotation = { defines.direction.east }
-        elseif rotation == "w" then
-            local place_rotation = { defines.direction.north }
-        end
+        local rotation_table = { ["n"] = defines.direction.south, ["s"] = defines.direction.north, ["e"] = defines.direction.west, ["w"] = defines.direction.east }
 
         game.players[e.player_index].build_from_cursor {
             position = place_position,
-            direction = place_rotation
+            direction = rotation_table[rotation]
         }
         player.clean_cursor()
         player.remove_item({ name = item, count = 1 })
-        game.write_file("output.txt",
-            "Placed " .. item, false,
-            e.player_index)
+        game.write_file("output.txt", "Placed " .. item, false, e.player_index)
     else
-        game.write_file("output.txt",
-            "ERROR\nItem not in inventory", false,
+        game.write_file("output.txt", "ERROR\nItem not in inventory", false,
             e.player_index)
     end
 end
@@ -187,9 +172,10 @@ function pick_up_item(e)
     local distance = split_param[2]
     local player = game.players[e.player_index]
     local pick_up_position = get_position(player, direction, distance)
-    local item = game.surfaces[1].find_entities_filtered { position = pick_up_position }[1]
-    game.write_file("output.txt",
-        "Picked up " .. item.name, false,
+    local item = game.surfaces[1].find_entities_filtered {
+        position = pick_up_position
+    }[1]
+    game.write_file("output.txt", "Picked up " .. item.name, false,
         e.player_index)
     player.mine_entity(item)
 end

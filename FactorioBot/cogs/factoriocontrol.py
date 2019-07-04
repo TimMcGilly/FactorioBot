@@ -148,7 +148,7 @@ class FactorioControl(commands.Cog):
             # Direction validation
             direction = helper.get_valid_direction(direction)
             if direction is not None:
-                rotation = helper.get_valid_direction(direction)
+                rotation = helper.get_valid_direction(rotation)
                 if rotation is not None:
                     await self.enqueue(self.exec_place, ctx, item, direction, distance, rotation)
                 else:
@@ -159,6 +159,37 @@ class FactorioControl(commands.Cog):
             await ctx.send(
                 "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
                 "all the items")
+
+    @commands.command()
+    @commands.cooldown(*helper.get_config('place'))
+    async def place_row(self, ctx, count, item, direction="N", distance: int = 1, rotation="N", offset=1):
+
+        if (count.isdigit() is True and int(count) > 0) and (str(offset).isdigit() is True and int(offset) > 0):
+            # Item validation
+            dirname = os.path.dirname(__file__)
+            filename = os.path.join(dirname, '../items.txt')
+            with open(filename, "r") as fp:
+                recipes = fp.readlines()
+            recipes = [x.strip() for x in recipes]
+            if item in recipes:
+
+                # Direction validation
+                direction = helper.get_valid_direction(direction)
+                if direction is not None:
+                    rotation = helper.get_valid_direction(rotation)
+                    if rotation is not None:
+                        await self.enqueue(self.exec_place_row, ctx, count, item, direction, distance, rotation, offset)
+                    else:
+                        await ctx.send("Please enter a valid rotation. Default is N.")
+                else:
+                    await ctx.send("Please enter a valid direction")
+            else:
+                await ctx.send(
+                    "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
+                    "all the items")
+        else:
+            await ctx.send(
+                "Invalid Argument: Count to place or offset is invalid.")
 
     @commands.command()
     @commands.cooldown(*helper.get_config('place'))
@@ -220,6 +251,16 @@ class FactorioControl(commands.Cog):
             await ctx.send("A error occurred.")
         else:
             output = "Successfully placed " + item
+
+        await ctx.send(output)
+
+    async def exec_place_row(self, ctx, count, item, direction, distance, rotation, offset):
+        output = await helper.SendFactorioCommand("place_row_d", item, direction, str(distance), rotation, count,
+                                                  str(offset))
+        if output.startswith("ERROR"):
+            await ctx.send("A error occurred.")
+        else:
+            output = "Successfully placed " + item + "s"
 
         await ctx.send(output)
 
