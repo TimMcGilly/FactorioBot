@@ -39,7 +39,6 @@ async def read_ouput_txt(observer: Observer):
 
     while observer.isAlive() is True:
         await asyncio.sleep(0.1)
-    print(observer.isAlive())
     with open(path) as fp:
         return fp.read()
 
@@ -115,7 +114,6 @@ def setup_config():
             }
         }
         """)
-        print(json_config)
         with open('config.json', 'w') as outfile:
             json.dump(json_config, outfile)
 
