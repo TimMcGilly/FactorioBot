@@ -1,6 +1,8 @@
 -- control.lua
 function split(inputstr, sep)
-    if sep == nil then sep = "%s" end
+    if sep == nil then
+        sep = "%s"
+    end
     local t = {}
     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
         table.insert(t, str)
@@ -49,18 +51,18 @@ commands.add_command("write_test_d", DISCORD_HELP_MESSAGE, function(e)
 end)
 
 commands.add_command("write_test_multiparam_d", DISCORD_HELP_MESSAGE,
-    function(e)
-        local split_param = split(e.parameter)
-        game.write_file("param1.txt", split_param[1], false, e.player_index)
-        game.write_file("param2.txt", split_param[2], false, e.player_index)
-    end)
+        function(e)
+            local split_param = split(e.parameter)
+            game.write_file("param1.txt", split_param[1], false, e.player_index)
+            game.write_file("param2.txt", split_param[2], false, e.player_index)
+        end)
 
 commands.add_command("craft_item_d", DISCORD_HELP_MESSAGE, function(e)
     local split_param = split(e.parameter)
     local status, errorMsg = pcall(craft_item, e)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
+                e.player_index)
     end
 end)
 
@@ -83,15 +85,15 @@ commands.add_command("set_research_d", DISCORD_HELP_MESSAGE, function(e)
 
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
+                e.player_index)
     else
         if isStop then
             game.write_file("output.txt", "Stopped current research.", false,
-                e.player_index)
+                    e.player_index)
         else
             game.write_file("output.txt",
-                "Started researching: " .. e.parameter, false,
-                e.player_index)
+                    "Started researching: " .. e.parameter, false,
+                    e.player_index)
         end
     end
 end)
@@ -102,7 +104,7 @@ commands.add_command("place_item_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg = pcall(place_item, e, split_param)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
+                e.player_index)
     end
 end)
 
@@ -110,7 +112,7 @@ commands.add_command("pick_up_item_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg = pcall(pick_up_item, e)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
-            e.player_index)
+                e.player_index)
     end
 end)
 
@@ -162,7 +164,7 @@ function place_item(e, split_param)
         game.write_file("output.txt", "Placed " .. item, false, e.player_index)
     else
         game.write_file("output.txt", "ERROR\nItem not in inventory", false,
-            e.player_index)
+                e.player_index)
     end
 end
 
@@ -176,7 +178,7 @@ function pick_up_item(e)
         position = pick_up_position
     }[1]
     game.write_file("output.txt", "Picked up " .. item.name, false,
-        e.player_index)
+            e.player_index)
     player.mine_entity(item)
 end
 

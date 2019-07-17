@@ -113,7 +113,8 @@ class FactorioControl(commands.Cog):
                 await self.enqueue(self.exec_craft, ctx, item, count)
             else:
                 await ctx.send(
-                    "Invalid Argument: Specified recipe name not found.\nPlease check for typos or type `!crafting_help` to get a list of all the items.")
+                    "Invalid Argument: Specified recipe name not found.\nPlease check for typos or type "
+                    "`!crafting_help` to get a list of all the items.")
 
     @commands.command()
     @commands.cooldown(*helper.get_config('research'))
@@ -130,7 +131,8 @@ class FactorioControl(commands.Cog):
                 await self.enqueue(self.exec_research, ctx, tech)
             else:
                 await ctx.send(
-                    "Invalid Argument: Specified research name not found.\nPlease check for typos or type `!research_help` to get a list of all the techs.")
+                    "Invalid Argument: Specified research name not found.\nPlease check for typos or type "
+                    "`!research_help` to get a list of all the techs.")
         else:
             await self.enqueue(self.exec_research, ctx)
 
@@ -157,8 +159,8 @@ class FactorioControl(commands.Cog):
                 await ctx.send("Please enter a valid direction")
         else:
             await ctx.send(
-                "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
-                "all the items")
+                "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to "
+                "get a list of all the items")
 
     @commands.command()
     @commands.cooldown(*helper.get_config('place'))
@@ -185,8 +187,8 @@ class FactorioControl(commands.Cog):
                     await ctx.send("Please enter a valid direction")
             else:
                 await ctx.send(
-                    "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
-                    "all the items")
+                    "Invalid Argument: Specified item name not found.\nPlease check for typos or type "
+                    "`!crafting_help` to get a list of all the items")
         else:
             await ctx.send(
                 "Invalid Argument: Count to place or offset is invalid.")
