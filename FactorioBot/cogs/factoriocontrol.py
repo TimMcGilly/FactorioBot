@@ -39,7 +39,11 @@ class FactorioControl(commands.Cog):
             current_command = self.command_queue.pop(0)
 
             # Calls function which is second index and unpacks the arguments and pass them into the function.
-            await current_command[1](*current_command[2:])
+            output = await current_command[1](*current_command[2:])
+
+            # If the called method returned a boolean, this is an override for screenshot_flag
+            if output is not None and isinstance(output, bool):
+                current_command[0] = output
 
             if current_command[0]:
                 await self.screenshot(current_command[2])
@@ -247,30 +251,27 @@ class FactorioControl(commands.Cog):
                      "(please use data.raw technology names)"
         await ctx.send(output)
 
+        if output.startswith("Technology is unavailable"):
+            return False
+
+
     async def exec_place(self, ctx, item, direction, distance, rotation):
         output = await helper.SendFactorioCommand("place_item_d", item, direction, str(distance), rotation)
-        if output.startswith("ERROR"):
-            await ctx.send("A error occurred.")
-        else:
+        if not output.startswith("ERROR"):
             output = "Successfully placed " + item
-
         await ctx.send(output)
 
     async def exec_place_row(self, ctx, count, item, direction, distance, rotation, offset):
         output = await helper.SendFactorioCommand("place_row_d", item, direction, str(distance), rotation, count,
                                                   str(offset))
-        if output.startswith("ERROR"):
-            await ctx.send("A error occurred.")
-        else:
+        if not output.startswith("ERROR"):
             output = "Successfully placed " + item + "s"
-
         await ctx.send(output)
 
     async def exec_pick_up(self, ctx, direction, distance):
         output = await helper.SendFactorioCommand("pick_up_item_d", direction, str(distance))
         if output.startswith("ERROR"):
             await ctx.send("A error occurred.")
-
         await ctx.send(output)
 
     async def exec_view_inventory(self, ctx):
