@@ -155,13 +155,19 @@ function place_item(e, split_param)
 
         local rotation_table = { ["n"] = defines.direction.south, ["s"] = defines.direction.north, ["e"] = defines.direction.west, ["w"] = defines.direction.east }
 
-        game.players[e.player_index].build_from_cursor {
-            position = place_position,
-            direction = rotation_table[rotation]
-        }
+        if game.players[e.player_index].can_build_from_cursor {
+            position = place_position
+        } then
+            game.players[e.player_index].build_from_cursor {
+                position = place_position,
+                direction = rotation_table[rotation]
+            }
+            player.remove_item({ name = item, count = 1 })
+            game.write_file("output.txt", "Placed " .. item, false, e.player_index)
+        else
+            game.write_file("output.txt", "ERROR\nCannot Place at this location.")
+        end
         player.clean_cursor()
-        player.remove_item({ name = item, count = 1 })
-        game.write_file("output.txt", "Placed " .. item, false, e.player_index)
     else
         game.write_file("output.txt", "ERROR\nItem not in inventory", false,
                 e.player_index)
