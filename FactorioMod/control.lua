@@ -107,7 +107,9 @@ commands.add_command("place_item_d", DISCORD_HELP_MESSAGE, function(e)
 end)
 
 commands.add_command("pick_up_item_d", DISCORD_HELP_MESSAGE, function(e)
-    local status, errorMsg = pcall(pick_up_item, e)
+    local split_param = split(e.parameter)
+
+    local status, errorMsg = pcall(pick_up_item, e, split_param)
     if status == false then
         game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
             e.player_index)
@@ -121,8 +123,28 @@ commands.add_command("place_row_d", DISCORD_HELP_MESSAGE, function(e)
     local status, errorMsg
     local event = e
     for i = 1, count do
+        local status, errorMsg = pcall(place_item, event, split_param)
+        if status == false then
+            game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
+                e.player_index)
+        end
         split_param[3] = split_param[3] + offset
-        place_item(event, split_param)
+    end
+end)
+
+commands.add_command("pick_up_row_d", DISCORD_HELP_MESSAGE, function(e)
+    local split_param = split(e.parameter)
+    local count = tonumber(split_param[3])
+    local offset = tonumber(split_param[4])
+    local status, errorMsg
+    local event = e
+    for i = 1, count do
+        local status, errorMsg = pcall(pick_up_item, event, split_param)
+        if status == false then
+            game.write_file("output.txt", "ERROR\n" .. errorMsg, false,
+                e.player_index)
+        end
+        split_param[2] = split_param[2] + offset
     end
 end)
 
@@ -148,9 +170,9 @@ function place_item(e, split_param)
     if player.get_item_count(item) > 0 then
         local stack = player.cursor_stack
         stack.set_stack({ name = item, count = 1 })
-
         local place_position = get_position(player, direction, distance)
-
+        game.print("Player x = " .. tostring(player.position.x) .. " Player y = " .. tostring(player.position.y))
+        game.print("Place x=" .. tostring(place_position.x) .. "Place y=" .. tostring(place_position.y))
         local rotation_table = { ["n"] = defines.direction.south, ["s"] = defines.direction.north, ["e"] = defines.direction.west, ["w"] = defines.direction.east }
 
         game.players[e.player_index].build_from_cursor {
@@ -166,17 +188,26 @@ function place_item(e, split_param)
     end
 end
 
-function pick_up_item(e)
-    local split_param = split(e.parameter)
+function pick_up_item(e, split_param)
     local direction = split_param[1]
     local distance = split_param[2]
     local player = game.players[e.player_index]
+    game.print("Player x = " .. tostring(player.position.x) .. " Player y = " .. tostring(player.position.y))
+
     local pick_up_position = get_position(player, direction, distance)
+    game.print("Pickup x=" .. tostring(pick_up_position.x) .. "Pickup y=" .. tostring(pick_up_position.y))
+
     local item = game.surfaces[1].find_entities_filtered {
-        position = pick_up_position
-    }[1]
+        position = pick_up_position,
+        radius = 100
+    }
+
+    for k, v in pairs(item) do
+        game.print(k)
+        game.print(v.name)
+    end
+    player.mine_entity(item[1])
     game.write_file("output.txt", "Picked up " .. item.name, false,
         e.player_index)
-    player.mine_entity(item)
 end
 

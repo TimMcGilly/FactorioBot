@@ -202,6 +202,21 @@ class FactorioControl(commands.Cog):
             await ctx.send("Please enter a valid direction")
 
     @commands.command()
+    @commands.cooldown(*helper.get_config('place'))
+    async def pick_up_row(self, ctx, count, direction="N", distance: int = 1, offset = 1):
+        if (count.isdigit() is True and int(count) > 0) and (str(offset).isdigit() is True and int(offset) > 0):
+            # Direction validation
+            direction = helper.get_valid_direction(direction)
+            if direction is not None:
+                await self.enqueue(self.exec_pick_up_row, ctx, count, direction, distance, offset)
+            else:
+                await ctx.send("Please enter a valid direction")
+        else:
+            await ctx.send(
+                "Invalid Argument: Specified item name not found.\nPlease check for typos or type `!crafting_help` to get a list of "
+                "all the items")
+
+    @commands.command()
     @commands.cooldown(*helper.get_config('view_gui'))
     async def view_inventory(self, ctx):
         await self.enqueue(self.exec_view_inventory, ctx, screenshot=False)
@@ -266,6 +281,13 @@ class FactorioControl(commands.Cog):
 
     async def exec_pick_up(self, ctx, direction, distance):
         output = await helper.SendFactorioCommand("pick_up_item_d", direction, str(distance))
+        if output.startswith("ERROR"):
+            await ctx.send("A error occurred.")
+
+        await ctx.send(output)
+
+    async def exec_pick_up_row(self, ctx, count, direction, distance, offset):
+        output = await helper.SendFactorioCommand("pick_up_row_d", direction, str(distance), count, offset)
         if output.startswith("ERROR"):
             await ctx.send("A error occurred.")
 
