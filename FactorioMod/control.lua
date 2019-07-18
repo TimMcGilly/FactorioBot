@@ -1,10 +1,10 @@
 -- control.lua
-function split(inputstr, sep)
+function split(inputStr, sep)
     if sep == nil then
         sep = "%s"
     end
     local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+    for str in string.gmatch(inputStr, "([^" .. sep .. "]+)") do
         table.insert(t, str)
     end
     return t
@@ -165,7 +165,7 @@ function place_item(e, split_param)
             player.remove_item({ name = item, count = 1 })
             game.write_file("output.txt", "Placed " .. item, false, e.player_index)
         else
-            game.write_file("output.txt", "ERROR\nCannot Place at this location.")
+            game.write_file("output.txt", "ERROR\nCannot place at this location. Something is in the way.")
         end
         player.clean_cursor()
     else
