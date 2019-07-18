@@ -183,8 +183,13 @@ function pick_up_item(e)
     local item = game.surfaces[1].find_entities_filtered {
         position = pick_up_position
     }[1]
-    game.write_file("output.txt", "Picked up " .. item.name, false,
-            e.player_index)
-    player.mine_entity(item)
+    if item ~= nil then
+        game.write_file("output.txt", "Picked up " .. item.name, false,
+                e.player_index)
+        player.mine_entity(item)
+    else
+        game.write_file("output.txt", "ERROR\nUnable to pick up. No item found at this location.")
+    end
+
 end
 
